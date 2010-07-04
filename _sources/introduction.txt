@@ -1,0 +1,38 @@
+Introduction
+============
+
+Welcome to the documentation of the "Large Scale Quantum Conductance" package.
+
+The package is organised as follows :
+
+ * a **doc/** directory where all  the documentation related to the package is
+   gathered.
+ * a **programs/** directory containing the Python source code for all the main
+   programs.
+ * a **utilities/** directory containing the Python utility modules needed  by the main
+   programs.
+
+A typical use for any of the main programs is :
+
+::
+
+  [prompt] python my_program.py [options]
+
+One can always call the help menu by typing either :
+
+::
+
+  [prompt] python my_program.py --help (or -h)
+
+or simply :
+
+::
+
+  [prompt] python my_program.py
+
+.. Note::
+  when  using  this package, please  keep  the  structure  intact  ( i.e. keep
+  the  tree structure  of the  main directory unchanged)  as the main programs
+  expect to find the modules in a directory ("utilities") which is at the same
+  point in the tree structure as the "programs" directory.
+

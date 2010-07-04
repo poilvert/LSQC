@@ -1,0 +1,506 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>modules &mdash; LSQC v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="LSQC v1.0 documentation" href="../index.html" />
+    <link rel="next" title="progressbar" href="progressbar.html" />
+    <link rel="prev" title="constraints" href="constraints.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="progressbar.html" title="progressbar"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="constraints.html" title="constraints"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">LSQC v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="modules">
+<h1><a class="reference internal" href="#module-modules" title="(Unix, Linux) "><tt class="xref py py-mod docutils literal"><span class="pre">modules</span></tt></a><a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h1>
+<div class="sidebar">
+<p class="first sidebar-title">Author</p>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Release:</th><td class="field-body">1.0</td>
+</tr>
+<tr class="field"><th class="field-name">Date:</th><td class="field-body">June 2010</td>
+</tr>
+<tr class="field"><th class="field-name">Authors:</th><td class="field-body"><strong>Nicolas Poilvert</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p id="module-modules"><em>Platforms: </em>Unix, Linux</p>
+<p><strong>Module information</strong> :</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Program:</th><td class="field-body">Module containing  all the classes, functions
+and parameters needed by the main programs</td>
+</tr>
+<tr class="field"><th class="field-name">Purpose:</th><td class="field-body">Prevent cluttering of the other programs</td>
+</tr>
+<tr class="field"><th class="field-name">Input(s):</th><td class="field-body">none</td>
+</tr>
+<tr class="field"><th class="field-name">Output(s):</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="modules.atom">
+<em class="property">class </em><tt class="descclassname">modules.</tt><tt class="descname">atom</tt><a class="reference internal" href="../_modules/modules.html#atom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.atom" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the class for Atoms</p>
+<dl class="docutils">
+<dt>An atom object has the following attributes :</dt>
+<dd><ul class="first last simple">
+<li>a symbol (a string) (access through <cite>*.symbol</cite>)</li>
+<li>an x coordinate (a float) (access through <cite>*.x</cite>)</li>
+<li>a  y coordinate (a float) (access through <cite>*.y</cite>)</li>
+<li>a  z coordinate (a float) (access through <cite>*.z</cite>)</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.barycenter">
+<tt class="descclassname">modules.</tt><tt class="descname">barycenter</tt><big>(</big><em>wannier_functions</em><big>)</big><a class="reference internal" href="../_modules/modules.html#barycenter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.barycenter" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function takes a list of Wannier Functions and computes
+its barycenter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Input(s) :</th><td class="field-body">a list of Wannier Function objects</td>
+</tr>
+<tr class="field"><th class="field-name">Output(s) :</th><td class="field-body">a rank-1 numpy array containing the x, y, z
+coordinates of the barycenter</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.print_wf">
+<tt class="descclassname">modules.</tt><tt class="descname">print_wf</tt><big>(</big><em>wf_list</em><big>)</big><a class="reference internal" href="../_modules/modules.html#print_wf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.print_wf" title="Permalink to this definition">¶</a></dt>
+<dd><p>A utility function that allows the user to print the information
+contained in each Wannier Function of a list</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Input(s) :</th><td class="field-body">a list of Wannier Function objects</td>
+</tr>
+<tr class="field"><th class="field-name">Output(s) :</th><td class="field-body">a string printed on the screen</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.read_htC">
+<tt class="descclassname">modules.</tt><tt class="descname">read_htC</tt><big>(</big><em>matrix_file</em><big>)</big><a class="reference internal" href="../_modules/modules.html#read_htC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.read_htC" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function reads a (conductor) Hamiltonian matrix given by the
+Wannier90 code.</p>
+<p>The name of the file generally ends with <cite>*_htC.dat</cite></p>
+<p>The format of this file is as follows :</p>
+<blockquote>
+<ul class="simple">
+<li>the first line contains comments</li>
+<li>the second line contains the size N of the (square) N*N matrix</li>
+<li>all the remaining lines are filled with numbers representing the
+matrix elements.</li>
+</ul>
+</blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>the matrix elements are printed in Fortran (column major)
+format. This means that if the matrix has elements H(i,j) for i and
+j in [1,N], then the matrix elements are given in the following
+order</p>
+<div class="last highlight-python"><pre>H(1,1)  H(2,1)  H(3,1)  H(4,1) ...
+H(j,1)  H(j+1,1) ...</pre>
+</div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Input(s) :</th><td class="field-body">a string corresponding to the name of the file
+containing the Hamiltonian matrix</td>
+</tr>
+<tr class="field"><th class="field-name">Output(s) :</th><td class="field-body">a rank-2 numpy array containing the Hamiltonian matrix</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.read_lead">
+<tt class="descclassname">modules.</tt><tt class="descname">read_lead</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="../_modules/modules.html#read_lead"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.read_lead" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function extracts the H00 and H01 matrices
+from a <cite>*_htL.dat</cite> or <cite>*_htR.dat</cite> Wannier90 formatted
+file.</p>
+<p>The H00 and H01 matrices correspond respectively
+to the <strong>on-site</strong> and <strong>off-diagonal</strong> matrix sub-blocks
+of a lead principal layer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Input(s) :</th><td class="field-body">a string corresponding to the name (full
+path) of the file containing the principal
+layer matrices</td>
+</tr>
+<tr class="field"><th class="field-name">Output(s) :</th><td class="field-body">a tuple with two rank-2 numpy arrays in the
+following order (H00,H01)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.read_tran_info">
+<tt class="descclassname">modules.</tt><tt class="descname">read_tran_info</tt><big>(</big><em>file</em><big>)</big><a class="reference internal" href="../_modules/modules.html#read_tran_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.read_tran_info" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<p>This function  is designed  to read a *_tran_info.dat file
+and extract its content</p>
+<dl class="docutils">
+<dt>The format of the file is as follows:</dt>
+<dd><ul class="first last">
+<li><p class="first">first line contains the total number of Wannier Funtions
+in the system</p>
+</li>
+<li><p class="first">second line contains the total number of WF in one principal layer</p>
+</li>
+<li><p class="first">third line contains the number of lead unit cells in one
+principal layer</p>
+</li>
+<li><p class="first">forth line contains the direction of conduction &#8220;x&#8221;, &#8220;y&#8221;
+or &#8220;z&#8221; followed by the second direction of sorting</p>
+</li>
+<li><dl class="first docutils">
+<dt>the next lines contain:</dt>
+<dd><p class="first last">WF index i, x<sub>i</sub>, y<sub>i</sub>, z<sub>i</sub>, &lt;w<sub>i</sub>| H |w<sub>i</sub>&gt;</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">then comes the total number of atoms in the system</p>
+</li>
+<li><dl class="first docutils">
+<dt>at last the remaining lines contain:</dt>
+<dd><p class="first last">Atomic symbol j, x<sub>j</sub>, y<sub>j</sub>, z<sub>j</sub></p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p>x<sub>i</sub> is the x coordinate of the i-th WF</p>
+<p>y<sub>j</sub> is the y coordinate of the j-th atom</p>
+<p>w<sub>i</sub> is the i-th WF</p>
+<p>&lt;w<sub>i</sub>| H |w<sub>i</sub>&gt;  is  the &#8220;on-site&#8221; matrix element associated
+with w<sub>i</sub></p>
+</blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Input(s) :</th><td class="field-body"><p class="first">a string corresponding to the name of the *_tran_info.dat file</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Output(s) :</th><td class="field-body"><p class="first">an integer representing the total number of Wannier Functions
+in the system</p>
+<p>an integer representing the number of Wannier Functions in one
+principal layer</p>
+<p>an integer representing the number of unit cells in one principal
+layer</p>
+<p>a string giving the direction of conduction (&#8220;x&#8221;, &#8220;y&#8221; or &#8220;z&#8221;)</p>
+<p>a string giving the second direction of sorting (&#8220;x&#8221;, &#8220;y&#8221; or &#8220;z&#8221;)</p>
+<p>a list of Wannier Function objects with the proper attributes as
+defined in the <em>wannier_function</em> class</p>
+<p>an integer representing the total number of atoms in the system</p>
+<p class="last">a list of atom objects with the proper attributes as defined in
+the <em>atom</em> class</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.read_xyz">
+<tt class="descclassname">modules.</tt><tt class="descname">read_xyz</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="../_modules/modules.html#read_xyz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.read_xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function reads an XYZ formatted file and returns
+a list of <cite>atom</cite> objects. If it can find it, the size
+of the system is also returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Input(s) :</th><td class="field-body">a string for the name of the xyz file</td>
+</tr>
+<tr class="field"><th class="field-name">Output(s) :</th><td class="field-body">a list of <cite>atom</cite> objects
+a float which represents the size of the system</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.sort">
+<tt class="descclassname">modules.</tt><tt class="descname">sort</tt><big>(</big><em>wf_list</em>, <em>cond_dir</em>, <em>second_dir</em>, <em>delta</em><big>)</big><a class="reference internal" href="../_modules/modules.html#sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function takes a list of Wannier Functions and sorts the
+atomic positions according to a scheme similar to the one in
+Wannier90.</p>
+<p>The first direction of sorting is <cite>cond_dir</cite> and the
+second direction of sorting is <cite>second_dir</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Input(s) :</th><td class="field-body"><p class="first">a list of Wannier Function objects</p>
+<p>a string that gives the first direction of sorting (which
+corresponds to the direction of conduction)</p>
+<p>a string that gives the second direction of sorting</p>
+<p>a float which gives the distance threshold for grouping WF</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Output(s) :</th><td class="field-body"><p class="first last">a list of Wannier Function objects properly sorted</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.sort_positions">
+<tt class="descclassname">modules.</tt><tt class="descname">sort_positions</tt><big>(</big><em>atomic_coordinates</em>, <em>cond_dir</em><big>)</big><a class="reference internal" href="../_modules/modules.html#sort_positions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.sort_positions" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function takes a list of atom objects and sorts
+the atomic positions only in the direction of conduction</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Input(s) :</th><td class="field-body"><p class="first">the list of <cite>atom</cite> objects</p>
+<p>a string which represents the direction of conduction
+(which serves as the main direction of sorting)</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Output(s) :</th><td class="field-body"><p class="first last">a list of <cite>atom</cite> objects in sorted order</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.translate_to_zero">
+<tt class="descclassname">modules.</tt><tt class="descname">translate_to_zero</tt><big>(</big><em>atomic_coordinates</em>, <em>cond_dir</em><big>)</big><a class="reference internal" href="../_modules/modules.html#translate_to_zero"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.translate_to_zero" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function takes a list of <cite>atom</cite> objects and
+translate the coordinates in the direction of conduction
+in such a way that the left-most atom is set to 0</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Input(s) :</th><td class="field-body"><p class="first">the list of <cite>atom</cite> objects</p>
+<p>a string which represents the direction of conduction</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Output(s) :</th><td class="field-body"><p class="first last">a list of <cite>atom</cite> objects with the properly
+translated coordinates</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="modules.wannier_function">
+<em class="property">class </em><tt class="descclassname">modules.</tt><tt class="descname">wannier_function</tt><a class="reference internal" href="../_modules/modules.html#wannier_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.wannier_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the class for Wannier Functions</p>
+<dl class="docutils">
+<dt>A wannier_function object has the following attributes :</dt>
+<dd><ul class="first last simple">
+<li>an index (an integer) (access through <cite>*.index</cite>)</li>
+<li>an x coordinate (a float) (access through <cite>*.x</cite>)</li>
+<li>a  y coordinate (a float) (access through <cite>*.y</cite>)</li>
+<li>a  z coordinate (a float) (access through <cite>*.z</cite>)</li>
+<li>an on-site matrix element (a float) (access through <cite>*.onsite</cite>)</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.write_htC">
+<tt class="descclassname">modules.</tt><tt class="descname">write_htC</tt><big>(</big><em>file_name</em>, <em>matrix</em><big>)</big><a class="reference internal" href="../_modules/modules.html#write_htC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.write_htC" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will take a Hamiltonian matrix and write it into
+a file in a format usable by Wannier90.</p>
+<p>In particular, the matrix will be written to file in column-major
+format (see <cite>read_htC</cite> for more detail).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Input(s) :</th><td class="field-body"><p class="first">a string corresponding to the name of the file that
+will contain the Hamiltonian matrix.</p>
+<p>a rank-2 numpy array containing the matrix</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Output(s) :</th><td class="field-body"><p class="first last">a file containing the matrix</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.write_tran_info">
+<tt class="descclassname">modules.</tt><tt class="descname">write_tran_info</tt><big>(</big><em>wf_num</em>, <em>wf_num_per_pl</em>, <em>cell_per_pl</em>, <em>cond_dir</em>, <em>second_dir</em>, <em>wf_list</em>, <em>atom_num</em>, <em>atom_list</em><big>)</big><a class="reference internal" href="../_modules/modules.html#write_tran_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.write_tran_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is designed to write a *_tran_info.dat file from a list of data</p>
+<p>The newly created file is called <cite>new_tran_info.dat</cite></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Input(s) :</th><td class="field-body"><p class="first">an integer for the total number of Wannier Functions in the system</p>
+<p>an integer for the number of Wannier Functions in one principal layer</p>
+<p>an integer for the number of unit cells in one principal layer</p>
+<p>a string giving the direction of conduction (which is also the first
+direction of sorting)</p>
+<p>a string giving the second direction of sorting</p>
+<p>a list of Wannier Function objects</p>
+<p>an integer giving the number of atoms in the system</p>
+<p>a list of atom objects</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Output(s) :</th><td class="field-body"><p class="first last">a file in a format similar to the *_tran_info.dat files given by Wannier90</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="modules.write_xyz">
+<tt class="descclassname">modules.</tt><tt class="descname">write_xyz</tt><big>(</big><em>filename</em>, <em>atomic_coordinates</em>, <em>size</em><big>)</big><a class="reference internal" href="../_modules/modules.html#write_xyz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.write_xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function takes a list of <cite>atom</cite> objects and prints
+their cartesian coordinates in a file with xyz format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Input(s) :</th><td class="field-body"><p class="first">a string for the name of the xyz file</p>
+<p>the list of <cite>atom</cite> objects</p>
+<p>a float, the size of the system in Angstrom(s)</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Output(s) :</th><td class="field-body"><p class="first last">a file with name <cite>filename</cite> containing the
+atomic positions in xyz format</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="constraints.html"
+                        title="previous chapter"><tt class="docutils literal"><span class="pre">constraints</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="progressbar.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">progressbar</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/utilities/modules.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="progressbar.html" title="progressbar"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="constraints.html" title="constraints"
+             >previous</a> |</li>
+        <li><a href="../index.html">LSQC v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Nicolas Poilvert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+    </div>
+  </body>
+</html>

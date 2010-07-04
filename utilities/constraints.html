@@ -1,0 +1,178 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>constraints &mdash; LSQC v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="LSQC v1.0 documentation" href="../index.html" />
+    <link rel="next" title="modules" href="modules.html" />
+    <link rel="prev" title="Tutorial" href="../tutorial.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="modules"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../tutorial.html" title="Tutorial"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">LSQC v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="constraints">
+<h1><a class="reference internal" href="#module-constraints" title="(Unix, Linux) "><tt class="xref py py-mod docutils literal"><span class="pre">constraints</span></tt></a><a class="headerlink" href="#constraints" title="Permalink to this headline">¶</a></h1>
+<div class="sidebar">
+<p class="first sidebar-title">Author</p>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Release:</th><td class="field-body">1.0</td>
+</tr>
+<tr class="field"><th class="field-name">Date:</th><td class="field-body">June 2010</td>
+</tr>
+<tr class="field"><th class="field-name">Authors:</th><td class="field-body"><strong>Nicolas Poilvert</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p id="module-constraints"><em>Platforms: </em>Unix, Linux</p>
+<p><strong>Module information</strong> :</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Program:</th><td class="field-body">module containing the <cite>constraints</cite>
+function needed by some of the programs
+like visualize_defect_influence.py or
+compactify_conductor.py</td>
+</tr>
+<tr class="field"><th class="field-name">Purpose:</th><td class="field-body">separate Wannier Functions into <strong>defect</strong>
+Wannier Functions and <strong>backbone</strong> Wannier
+Functions</td>
+</tr>
+<tr class="field"><th class="field-name">Input(s):</th><td class="field-body">3 cartesian coordinates <cite>&#8220;x&#8221;</cite>, <cite>&#8220;y&#8221;</cite> and <cite>&#8220;z&#8221;</cite></td>
+</tr>
+<tr class="field"><th class="field-name">Output(s):</th><td class="field-body">a boolean</td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="constraints.constraints">
+<tt class="descclassname">constraints.</tt><tt class="descname">constraints</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em><big>)</big><a class="reference internal" href="../_modules/constraints.html#constraints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#constraints.constraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function has to be built by the user.</p>
+<p>One needs to construct the function so as to fit the
+following requirements :</p>
+<blockquote>
+<ul class="simple">
+<li>the function needs to return <em>False</em> if the Wannier
+Function belongs to the <cite>defect</cite></li>
+<li>the function needs to return <em>True</em> if the Wannier
+Function belongs to the <cite>backbone</cite></li>
+</ul>
+</blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Input(s) :</th><td class="field-body">3 floats corresponding to the Wannier Function
+coordinates</td>
+</tr>
+<tr class="field"><th class="field-name">Output(s) :</th><td class="field-body">a boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../tutorial.html"
+                        title="previous chapter">Tutorial</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">modules</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/utilities/constraints.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="modules"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../tutorial.html" title="Tutorial"
+             >previous</a> |</li>
+        <li><a href="../index.html">LSQC v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Nicolas Poilvert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+    </div>
+  </body>
+</html>
