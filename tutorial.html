@@ -8,8 +8,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Tutorial &mdash; LSQC v1.0 documentation</title>
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -19,9 +19,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="LSQC v1.0 documentation" href="index.html" />
     <link rel="next" title="constraints" href="utilities/constraints.html" />
     <link rel="prev" title="Main programs documentation" href="main_program_documentation.html" /> 
@@ -60,7 +60,7 @@ with <a class="reference external" href="http://www.wannier.org">Wannier90</a>.<
 <p>We will be studying a (3,3) Carbon Nanotube (Armchair-type Carbon Nanotube) with a single Hydrogen defect
 functionalized on one of the sidewall carbon atom as shown on the figure below.</p>
 </blockquote>
-<a class="reference internal image-reference" href="_images/cnt33H_side_view.png"><div align="center" class="align-center"><img alt="_images/cnt33H_side_view.png" class="align-center" src="_images/cnt33H_side_view.png" style="width: 505.2px; height: 122.4px;" /></div>
+<a class="reference internal image-reference" href="images/cnt33H_side_view.png"><div align="center" class="align-center"><img alt="images/cnt33H_side_view.png" class="align-center" src="images/cnt33H_side_view.png" style="width: 505.2px; height: 122.4px;" /></div>
 </a>
 <div class="section" id="quantum-conductance-of-a-3-3-cnt-with-a-single-h-defect">
 <h2>Quantum Conductance of a (3,3) CNT with a single H defect<a class="headerlink" href="#quantum-conductance-of-a-3-3-cnt-with-a-single-h-defect" title="Permalink to this headline">¶</a></h2>
@@ -82,10 +82,10 @@ for computing the Wannier Functions later on)</li>
 <dl class="docutils">
 <dt>The necessary input files are given below :</dt>
 <dd><ul class="first last simple">
-<li><a class="reference download internal" href="_downloads/scf.in"><tt class="xref download docutils literal"><span class="pre">scf.in</span></tt></a></li>
-<li><a class="reference download internal" href="_downloads/nscf.in"><tt class="xref download docutils literal"><span class="pre">nscf.in</span></tt></a></li>
-<li><a class="reference download internal" href="_downloads/pw2wannier90.in"><tt class="xref download docutils literal"><span class="pre">pw2wannier90.in</span></tt></a></li>
-<li><a class="reference download internal" href="_downloads/cnt33H.win"><tt class="xref download docutils literal"><span class="pre">cnt33H.win</span></tt></a></li>
+<li><a class="reference download internal" href="downloads/scf.in"><tt class="xref download docutils literal"><span class="pre">scf.in</span></tt></a></li>
+<li><a class="reference download internal" href="downloads/nscf.in"><tt class="xref download docutils literal"><span class="pre">nscf.in</span></tt></a></li>
+<li><a class="reference download internal" href="downloads/pw2wannier90.in"><tt class="xref download docutils literal"><span class="pre">pw2wannier90.in</span></tt></a></li>
+<li><a class="reference download internal" href="downloads/cnt33H.win"><tt class="xref download docutils literal"><span class="pre">cnt33H.win</span></tt></a></li>
 </ul>
 </dd>
 </dl>
@@ -167,7 +167,7 @@ we execute the following command in a terminal:</p>
 <p>The user should of course replace <tt class="docutils literal"><span class="pre">/path/to/visualize_defect_influence.py</span></tt> by the actual path to the program <cite>visualize_defect_influence.py</cite>
 on his/her computer. One then can save the image with <a class="reference external" href="http://code.enthought.com/projects/mayavi/">Mayavi</a> and obtain the picture below:</p>
 </blockquote>
-<a class="reference internal image-reference" href="_images/H_influence.png"><div align="center" class="align-center"><img alt="_images/H_influence.png" class="align-center" src="_images/H_influence.png" style="width: 688.5px; height: 346.5px;" /></div>
+<a class="reference internal image-reference" href="images/H_influence.png"><div align="center" class="align-center"><img alt="images/H_influence.png" class="align-center" src="images/H_influence.png" style="width: 688.5px; height: 346.5px;" /></div>
 </a>
 <blockquote>
 The white semi-transparent balls represent the atoms in the nanotube. The colored balls with different sizes represent the &#8220;on-site&#8221;
@@ -177,9 +177,9 @@ the defect, the deviations go quickly to zero. This allows us to determine that,
 away from the defect (on both sides) without &#8220;feeling&#8221; the infuence of the defect too much.</blockquote>
 <p><strong>Generating rotationally equivalent conductor matrices</strong></p>
 <blockquote>
-As one can easily realize by inspecting the structures, the lead part of the nanotube possesses a <img class="math" src="_images/math/3a1f43766bf2f5511df35ab6d4a0b84dbcb6dadb.png" alt="\frac{2\pi}{3}"/> rotational symmetry
+As one can easily realize by inspecting the structures, the lead part of the nanotube possesses a <img class="math" src="images/math/3a1f43766bf2f5511df35ab6d4a0b84dbcb6dadb.png" alt="\frac{2\pi}{3}"/> rotational symmetry
 about its axis. This symmetry is shown below by looking at the 3 rotated equivalent structures along the nanotube axis.</blockquote>
-<a class="reference internal image-reference" href="_images/rotated_equivalents.png"><div align="center" class="align-center"><img alt="_images/rotated_equivalents.png" class="align-center" src="_images/rotated_equivalents.png" style="width: 384.0px; height: 126.0px;" /></div>
+<a class="reference internal image-reference" href="images/rotated_equivalents.png"><div align="center" class="align-center"><img alt="images/rotated_equivalents.png" class="align-center" src="images/rotated_equivalents.png" style="width: 384.0px; height: 126.0px;" /></div>
 </a>
 <blockquote>
 <p>In order to generate the Hamiltonian matrices for the 120-degre and 240-degre rotated systems, we will use <cite>rotate_conductor.py</cite>.
@@ -187,8 +187,8 @@ The use is quite simple and all we need to know is how many radians is 120 degre
 <blockquote>
 <tt class="docutils literal"><span class="pre">python</span> <span class="pre">/path/to/rotate_conductor.py</span> <span class="pre">-f</span> <span class="pre">cnt33H_tran_info.dat</span> <span class="pre">-m</span> <span class="pre">cnt33H_htC.dat</span> <span class="pre">-a</span> <span class="pre">2.09439510239</span></tt></blockquote>
 <p>This command will produce a file called <cite>rotated_matrix_htC.dat</cite> that we will rename <cite>cnt33H_120_htC.dat</cite> because it corresponds to
-the <img class="math" src="_images/math/3a1f43766bf2f5511df35ab6d4a0b84dbcb6dadb.png" alt="\frac{2\pi}{3}"/> rotated system. In analogy to the above procedure, we can easily produce the Hamiltonian matrix corresponding to
-the <img class="math" src="_images/math/6ecf0a74d8b619f5c498690e17e1252ce0a17de1.png" alt="\frac{4\pi}{3}"/> rotated system (that we will call <cite>cnt33H_240_htC.dat</cite>).</p>
+the <img class="math" src="images/math/3a1f43766bf2f5511df35ab6d4a0b84dbcb6dadb.png" alt="\frac{2\pi}{3}"/> rotated system. In analogy to the above procedure, we can easily produce the Hamiltonian matrix corresponding to
+the <img class="math" src="images/math/6ecf0a74d8b619f5c498690e17e1252ce0a17de1.png" alt="\frac{4\pi}{3}"/> rotated system (that we will call <cite>cnt33H_240_htC.dat</cite>).</p>
 </blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -308,7 +308,7 @@ lead               random_system</pre>
 <tt class="docutils literal"><span class="pre">wannier90.x</span> <span class="pre">random_system</span></tt></blockquote>
 <p>The computed Quantum Conductance of this 5-defect system is shown on the figure below.</p>
 </blockquote>
-<a class="reference internal image-reference" href="_images/random_QC.png"><div align="center" class="align-center"><img alt="_images/random_QC.png" class="align-center" src="_images/random_QC.png" style="width: 594.0px; height: 459.0px;" /></div>
+<a class="reference internal image-reference" href="images/random_QC.png"><div align="center" class="align-center"><img alt="images/random_QC.png" class="align-center" src="images/random_QC.png" style="width: 594.0px; height: 459.0px;" /></div>
 </a>
 </div>
 </div>
@@ -336,7 +336,7 @@ lead               random_system</pre>
                         title="next chapter"><tt class="docutils literal"><span class="pre">constraints</span></tt></a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/tutorial.txt"
+    <li><a href="sources/tutorial.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">

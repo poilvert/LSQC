@@ -1,0 +1,136 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>constraints &mdash; LSQC v1.0 documentation</title>
+    <link rel="stylesheet" href="../static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <link rel="top" title="LSQC v1.0 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">LSQC v1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for constraints</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+<span class="c"># constraints.py</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   **Module information** :</span>
+
+<span class="sd">   :Program:    module containing the `constraints`</span>
+<span class="sd">                function needed by some of the programs</span>
+<span class="sd">                like visualize_defect_influence.py or</span>
+<span class="sd">                compactify_conductor.py</span>
+<span class="sd">   :Purpose:    separate Wannier Functions into **defect**</span>
+<span class="sd">                Wannier Functions and **backbone** Wannier</span>
+<span class="sd">                Functions</span>
+<span class="sd">   :Input(s):   3 cartesian coordinates `&quot;x&quot;`, `&quot;y&quot;` and `&quot;z&quot;`</span>
+<span class="sd">   :Output(s):  a boolean</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="constraints"><a class="viewcode-back" href="../utilities/constraints.html#constraints.constraints">[docs]</a><span class="k">def</span> <span class="nf">constraints</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   This function has to be built by the user.</span>
+
+<span class="sd">   One needs to construct the function so as to fit the</span>
+<span class="sd">   following requirements :</span>
+
+<span class="sd">    - the function needs to return *False* if the Wannier</span>
+<span class="sd">      Function belongs to the `defect`</span>
+<span class="sd">    - the function needs to return *True* if the Wannier</span>
+<span class="sd">      Function belongs to the `backbone`</span>
+
+<span class="sd">   :Input(s):  3 floats corresponding to the Wannier Function</span>
+<span class="sd">               coordinates</span>
+
+<span class="sd">   :Output(s): a boolean</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+  <span class="k">if</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">&lt;=</span><span class="mf">2.7</span><span class="p">:</span>
+    <span class="n">boolean</span> <span class="o">=</span> <span class="bp">True</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">boolean</span> <span class="o">=</span> <span class="bp">False</span>
+  <span class="c"># user code here</span>
+
+  <span class="k">return</span> <span class="n">boolean</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">LSQC v1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Nicolas Poilvert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+    </div>
+  </body>
+</html>

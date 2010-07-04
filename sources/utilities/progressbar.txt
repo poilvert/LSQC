@@ -1,0 +1,13 @@
+:mod:`progressbar`
+==================
+
+.. sidebar:: Author 
+
+    :Release: 2.2
+    :Date: July 2006
+    :Authors: **Nilton Volpato**
+
+.. automodule:: progressbar
+    :members:
+    :platform: Unix, Linux
+

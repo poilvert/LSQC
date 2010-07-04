@@ -8,8 +8,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>modules &mdash; LSQC v1.0 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -19,9 +19,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
     <link rel="top" title="LSQC v1.0 documentation" href="../index.html" />
     <link rel="next" title="progressbar" href="progressbar.html" />
     <link rel="prev" title="constraints" href="constraints.html" /> 
@@ -87,7 +87,7 @@ and parameters needed by the main programs</td>
 </table>
 <dl class="class">
 <dt id="modules.atom">
-<em class="property">class </em><tt class="descclassname">modules.</tt><tt class="descname">atom</tt><a class="reference internal" href="../_modules/modules.html#atom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.atom" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">modules.</tt><tt class="descname">atom</tt><a class="reference internal" href="../modules/modules.html#atom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.atom" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the class for Atoms</p>
 <dl class="docutils">
 <dt>An atom object has the following attributes :</dt>
@@ -103,7 +103,7 @@ and parameters needed by the main programs</td>
 
 <dl class="function">
 <dt id="modules.barycenter">
-<tt class="descclassname">modules.</tt><tt class="descname">barycenter</tt><big>(</big><em>wannier_functions</em><big>)</big><a class="reference internal" href="../_modules/modules.html#barycenter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.barycenter" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modules.</tt><tt class="descname">barycenter</tt><big>(</big><em>wannier_functions</em><big>)</big><a class="reference internal" href="../modules/modules.html#barycenter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.barycenter" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function takes a list of Wannier Functions and computes
 its barycenter.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -121,7 +121,7 @@ coordinates of the barycenter</td>
 
 <dl class="function">
 <dt id="modules.print_wf">
-<tt class="descclassname">modules.</tt><tt class="descname">print_wf</tt><big>(</big><em>wf_list</em><big>)</big><a class="reference internal" href="../_modules/modules.html#print_wf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.print_wf" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modules.</tt><tt class="descname">print_wf</tt><big>(</big><em>wf_list</em><big>)</big><a class="reference internal" href="../modules/modules.html#print_wf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.print_wf" title="Permalink to this definition">¶</a></dt>
 <dd><p>A utility function that allows the user to print the information
 contained in each Wannier Function of a list</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -138,7 +138,7 @@ contained in each Wannier Function of a list</p>
 
 <dl class="function">
 <dt id="modules.read_htC">
-<tt class="descclassname">modules.</tt><tt class="descname">read_htC</tt><big>(</big><em>matrix_file</em><big>)</big><a class="reference internal" href="../_modules/modules.html#read_htC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.read_htC" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modules.</tt><tt class="descname">read_htC</tt><big>(</big><em>matrix_file</em><big>)</big><a class="reference internal" href="../modules/modules.html#read_htC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.read_htC" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function reads a (conductor) Hamiltonian matrix given by the
 Wannier90 code.</p>
 <p>The name of the file generally ends with <cite>*_htC.dat</cite></p>
@@ -176,7 +176,7 @@ containing the Hamiltonian matrix</td>
 
 <dl class="function">
 <dt id="modules.read_lead">
-<tt class="descclassname">modules.</tt><tt class="descname">read_lead</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="../_modules/modules.html#read_lead"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.read_lead" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modules.</tt><tt class="descname">read_lead</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="../modules/modules.html#read_lead"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.read_lead" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function extracts the H00 and H01 matrices
 from a <cite>*_htL.dat</cite> or <cite>*_htR.dat</cite> Wannier90 formatted
 file.</p>
@@ -200,7 +200,7 @@ following order (H00,H01)</td>
 
 <dl class="function">
 <dt id="modules.read_tran_info">
-<tt class="descclassname">modules.</tt><tt class="descname">read_tran_info</tt><big>(</big><em>file</em><big>)</big><a class="reference internal" href="../_modules/modules.html#read_tran_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.read_tran_info" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modules.</tt><tt class="descname">read_tran_info</tt><big>(</big><em>file</em><big>)</big><a class="reference internal" href="../modules/modules.html#read_tran_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.read_tran_info" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <p>This function  is designed  to read a *_tran_info.dat file
 and extract its content</p>
@@ -269,7 +269,7 @@ the <em>atom</em> class</p>
 
 <dl class="function">
 <dt id="modules.read_xyz">
-<tt class="descclassname">modules.</tt><tt class="descname">read_xyz</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="../_modules/modules.html#read_xyz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.read_xyz" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modules.</tt><tt class="descname">read_xyz</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="../modules/modules.html#read_xyz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.read_xyz" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function reads an XYZ formatted file and returns
 a list of <cite>atom</cite> objects. If it can find it, the size
 of the system is also returned.</p>
@@ -288,7 +288,7 @@ a float which represents the size of the system</td>
 
 <dl class="function">
 <dt id="modules.sort">
-<tt class="descclassname">modules.</tt><tt class="descname">sort</tt><big>(</big><em>wf_list</em>, <em>cond_dir</em>, <em>second_dir</em>, <em>delta</em><big>)</big><a class="reference internal" href="../_modules/modules.html#sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.sort" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modules.</tt><tt class="descname">sort</tt><big>(</big><em>wf_list</em>, <em>cond_dir</em>, <em>second_dir</em>, <em>delta</em><big>)</big><a class="reference internal" href="../modules/modules.html#sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.sort" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function takes a list of Wannier Functions and sorts the
 atomic positions according to a scheme similar to the one in
 Wannier90.</p>
@@ -314,7 +314,7 @@ corresponds to the direction of conduction)</p>
 
 <dl class="function">
 <dt id="modules.sort_positions">
-<tt class="descclassname">modules.</tt><tt class="descname">sort_positions</tt><big>(</big><em>atomic_coordinates</em>, <em>cond_dir</em><big>)</big><a class="reference internal" href="../_modules/modules.html#sort_positions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.sort_positions" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modules.</tt><tt class="descname">sort_positions</tt><big>(</big><em>atomic_coordinates</em>, <em>cond_dir</em><big>)</big><a class="reference internal" href="../modules/modules.html#sort_positions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.sort_positions" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function takes a list of atom objects and sorts
 the atomic positions only in the direction of conduction</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -335,7 +335,7 @@ the atomic positions only in the direction of conduction</p>
 
 <dl class="function">
 <dt id="modules.translate_to_zero">
-<tt class="descclassname">modules.</tt><tt class="descname">translate_to_zero</tt><big>(</big><em>atomic_coordinates</em>, <em>cond_dir</em><big>)</big><a class="reference internal" href="../_modules/modules.html#translate_to_zero"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.translate_to_zero" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modules.</tt><tt class="descname">translate_to_zero</tt><big>(</big><em>atomic_coordinates</em>, <em>cond_dir</em><big>)</big><a class="reference internal" href="../modules/modules.html#translate_to_zero"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.translate_to_zero" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function takes a list of <cite>atom</cite> objects and
 translate the coordinates in the direction of conduction
 in such a way that the left-most atom is set to 0</p>
@@ -357,7 +357,7 @@ translated coordinates</p>
 
 <dl class="class">
 <dt id="modules.wannier_function">
-<em class="property">class </em><tt class="descclassname">modules.</tt><tt class="descname">wannier_function</tt><a class="reference internal" href="../_modules/modules.html#wannier_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.wannier_function" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">modules.</tt><tt class="descname">wannier_function</tt><a class="reference internal" href="../modules/modules.html#wannier_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.wannier_function" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the class for Wannier Functions</p>
 <dl class="docutils">
 <dt>A wannier_function object has the following attributes :</dt>
@@ -374,7 +374,7 @@ translated coordinates</p>
 
 <dl class="function">
 <dt id="modules.write_htC">
-<tt class="descclassname">modules.</tt><tt class="descname">write_htC</tt><big>(</big><em>file_name</em>, <em>matrix</em><big>)</big><a class="reference internal" href="../_modules/modules.html#write_htC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.write_htC" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modules.</tt><tt class="descname">write_htC</tt><big>(</big><em>file_name</em>, <em>matrix</em><big>)</big><a class="reference internal" href="../modules/modules.html#write_htC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.write_htC" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function will take a Hamiltonian matrix and write it into
 a file in a format usable by Wannier90.</p>
 <p>In particular, the matrix will be written to file in column-major
@@ -397,7 +397,7 @@ will contain the Hamiltonian matrix.</p>
 
 <dl class="function">
 <dt id="modules.write_tran_info">
-<tt class="descclassname">modules.</tt><tt class="descname">write_tran_info</tt><big>(</big><em>wf_num</em>, <em>wf_num_per_pl</em>, <em>cell_per_pl</em>, <em>cond_dir</em>, <em>second_dir</em>, <em>wf_list</em>, <em>atom_num</em>, <em>atom_list</em><big>)</big><a class="reference internal" href="../_modules/modules.html#write_tran_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.write_tran_info" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modules.</tt><tt class="descname">write_tran_info</tt><big>(</big><em>wf_num</em>, <em>wf_num_per_pl</em>, <em>cell_per_pl</em>, <em>cond_dir</em>, <em>second_dir</em>, <em>wf_list</em>, <em>atom_num</em>, <em>atom_list</em><big>)</big><a class="reference internal" href="../modules/modules.html#write_tran_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.write_tran_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function is designed to write a *_tran_info.dat file from a list of data</p>
 <p>The newly created file is called <cite>new_tran_info.dat</cite></p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -424,7 +424,7 @@ direction of sorting)</p>
 
 <dl class="function">
 <dt id="modules.write_xyz">
-<tt class="descclassname">modules.</tt><tt class="descname">write_xyz</tt><big>(</big><em>filename</em>, <em>atomic_coordinates</em>, <em>size</em><big>)</big><a class="reference internal" href="../_modules/modules.html#write_xyz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.write_xyz" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modules.</tt><tt class="descname">write_xyz</tt><big>(</big><em>filename</em>, <em>atomic_coordinates</em>, <em>size</em><big>)</big><a class="reference internal" href="../modules/modules.html#write_xyz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.write_xyz" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function takes a list of <cite>atom</cite> objects and prints
 their cartesian coordinates in a file with xyz format</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -460,7 +460,7 @@ atomic positions in xyz format</p>
                         title="next chapter"><tt class="docutils literal"><span class="pre">progressbar</span></tt></a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="../_sources/utilities/modules.txt"
+    <li><a href="../sources/utilities/modules.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">

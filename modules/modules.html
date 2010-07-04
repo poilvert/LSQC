@@ -1,0 +1,1111 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>modules &mdash; LSQC v1.0 documentation</title>
+    <link rel="stylesheet" href="../static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <link rel="top" title="LSQC v1.0 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">LSQC v1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for modules</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+<span class="c"># modules.py</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   **Module information** :</span>
+
+<span class="sd">   :Program:   Module containing  all the classes, functions</span>
+<span class="sd">               and parameters needed by the main programs</span>
+<span class="sd">   :Purpose:   Prevent cluttering of the other programs</span>
+<span class="sd">   :Input(s):  none</span>
+<span class="sd">   :Output(s): none</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c">### Header bar to display in all program&#39;s output ###</span>
+
+<span class="n">header</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">          LARGE SCALE QUANTUM CONDUCTANCE PACKAGE</span>
+<span class="s">          Nicolas Poilvert</span>
+<span class="s">&quot;&quot;&quot;</span>
+
+<span class="c">### Default widgets for the progress bar ###</span>
+
+<span class="kn">from</span> <span class="nn">progressbar</span> <span class="kn">import</span> <span class="n">Percentage</span><span class="p">,</span> <span class="n">Bar</span><span class="p">,</span> <span class="n">ETA</span>
+
+<span class="n">widgets</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39; Progress : &#39;</span><span class="p">,</span> <span class="n">Percentage</span><span class="p">(),</span> <span class="s">&#39; &#39;</span><span class="p">,</span>
+             <span class="n">Bar</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s">&quot;#&quot;</span><span class="p">,</span><span class="n">left</span><span class="o">=</span><span class="s">&quot;[&quot;</span><span class="p">,</span><span class="n">right</span><span class="o">=</span><span class="s">&quot;]&quot;</span><span class="p">),</span><span class="s">&#39; &#39;</span><span class="p">,</span>
+             <span class="n">ETA</span><span class="p">()]</span>
+
+<span class="c">### Function designed to read a *_tran_info.dat file ###</span>
+<span class="c">### and load its content                             ###</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="nn">progressbar</span> <span class="kn">import</span> <span class="n">ProgressBar</span>
+
+<div class="viewcode-block" id="read_tran_info"><a class="viewcode-back" href="../utilities/modules.html#modules.read_tran_info">[docs]</a><span class="k">def</span> <span class="nf">read_tran_info</span><span class="p">(</span><span class="nb">file</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   This function  is designed  to read a \*_tran_info.dat file</span>
+<span class="sd">   and extract its content</span>
+
+<span class="sd">   The format of the file is as follows:</span>
+<span class="sd">     - first line contains the total number of Wannier Funtions</span>
+<span class="sd">       in the system</span>
+<span class="sd">     - second line contains the total number of WF in one principal layer</span>
+<span class="sd">     - third line contains the number of lead unit cells in one</span>
+<span class="sd">       principal layer</span>
+<span class="sd">     - forth line contains the direction of conduction &quot;x&quot;, &quot;y&quot;</span>
+<span class="sd">       or &quot;z&quot; followed by the second direction of sorting</span>
+<span class="sd">     - the next lines contain:</span>
+<span class="sd">         WF index i, x\ :sub:`i`\ , y\ :sub:`i`\ , z\ :sub:`i`\ , &lt;w\ :sub:`i`\ |H|w\ :sub:`i`\ &gt;</span>
+<span class="sd">     - then comes the total number of atoms in the system</span>
+<span class="sd">     - at last the remaining lines contain:</span>
+<span class="sd">         Atomic symbol j, x\ :sub:`j`\ , y\ :sub:`j`\ , z\ :sub:`j`\ </span>
+
+<span class="sd">   x\ :sub:`i`\  is the x coordinate of the i-th WF</span>
+
+<span class="sd">   y\ :sub:`j`\  is the y coordinate of the j-th atom</span>
+
+<span class="sd">   w\ :sub:`i`\  is the i-th WF</span>
+
+<span class="sd">   &lt;w\ :sub:`i`\ |H|w\ :sub:`i`\ &gt;  is  the &quot;on-site&quot; matrix element associated</span>
+<span class="sd">   with w\ :sub:`i`\ </span>
+
+<span class="sd">  :Input(s):   a string corresponding to the name of the \*_tran_info.dat file</span>
+
+<span class="sd">  :Output(s):  an integer representing the total number of Wannier Functions</span>
+<span class="sd">               in the system</span>
+
+<span class="sd">               an integer representing the number of Wannier Functions in one</span>
+<span class="sd">               principal layer</span>
+
+<span class="sd">               an integer representing the number of unit cells in one principal</span>
+<span class="sd">               layer</span>
+
+<span class="sd">               a string giving the direction of conduction (&quot;x&quot;, &quot;y&quot; or &quot;z&quot;)</span>
+
+<span class="sd">               a string giving the second direction of sorting (&quot;x&quot;, &quot;y&quot; or &quot;z&quot;)</span>
+
+<span class="sd">               a list of Wannier Function objects with the proper attributes as</span>
+<span class="sd">               defined in the *wannier_function* class</span>
+
+<span class="sd">               an integer representing the total number of atoms in the system</span>
+
+<span class="sd">               a list of atom objects with the proper attributes as defined in</span>
+<span class="sd">               the *atom* class</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="c"># checking that the file actually exists</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="nb">file</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_tran_info :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; </span><span class="si">%s</span><span class="s"> is either not in the current working directory&quot;</span> <span class="o">%</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; or is not a file&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+ 
+  <span class="n">file_unit</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+  <span class="n">lines</span>     <span class="o">=</span> <span class="n">file_unit</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+  <span class="n">file_unit</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+  <span class="c"># creating a progress bar</span>
+  <span class="n">loop_max</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+  <span class="n">load_widgets</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39; Reading </span><span class="si">%s</span><span class="s"> : &#39;</span> <span class="o">%</span><span class="p">(</span><span class="nb">file</span><span class="p">),</span> <span class="n">Percentage</span><span class="p">(),</span> <span class="s">&#39; &#39;</span><span class="p">,</span>
+                  <span class="n">Bar</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s">&quot;#&quot;</span><span class="p">,</span><span class="n">left</span><span class="o">=</span><span class="s">&quot;[&quot;</span><span class="p">,</span><span class="n">right</span><span class="o">=</span><span class="s">&quot;]&quot;</span><span class="p">),</span><span class="s">&#39; &#39;</span><span class="p">,</span>
+                  <span class="n">ETA</span><span class="p">()]</span>
+  <span class="n">pgb</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">(</span><span class="n">widgets</span><span class="o">=</span><span class="n">load_widgets</span><span class="p">,</span><span class="n">maxval</span><span class="o">=</span><span class="n">loop_max</span><span class="p">,</span><span class="n">term_width</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+  <span class="c"># regular expressions for integers and floats</span>
+  <span class="n">integer_re</span> <span class="o">=</span> <span class="s">r&#39;\d+&#39;</span>
+  <span class="n">float_re</span>   <span class="o">=</span> <span class="s">r&#39;[+-]?[0-9]*\.[0-9]*[eE]?[+-]?[0-9]*&#39;</span>
+  <span class="c">#float_re = r&#39;[+-]? *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?&#39;</span>
+  <span class="n">atom_re</span>    <span class="o">=</span> <span class="s">r&#39;(\w+)\s+(&#39;</span><span class="o">+</span><span class="n">float_re</span><span class="o">+</span><span class="s">r&#39;)\s+(&#39;</span><span class="o">+</span><span class="n">float_re</span><span class="o">+</span><span class="s">r&#39;)\s+(&#39;</span><span class="o">+</span><span class="n">float_re</span><span class="o">+</span><span class="s">r&#39;)&#39;</span>
+  <span class="n">wf_re</span>      <span class="o">=</span> <span class="s">r&#39;(&#39;</span><span class="o">+</span><span class="n">integer_re</span><span class="o">+</span><span class="s">r&#39;)\s+(&#39;</span><span class="o">+</span><span class="n">float_re</span><span class="o">+</span><span class="s">r&#39;)\s+(&#39;</span><span class="o">+</span><span class="n">float_re</span><span class="o">+</span><span class="s">r&#39;)\s+(&#39;</span><span class="o">+</span><span class="n">float_re</span><span class="o">+</span><span class="s">r&#39;)\s+(&#39;</span><span class="o">+</span><span class="n">float_re</span><span class="o">+</span><span class="s">r&#39;)&#39;</span>
+
+  <span class="c"># extracting the total number of WF on the first line</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">r&#39;(&#39;</span><span class="o">+</span><span class="n">integer_re</span><span class="o">+</span><span class="s">r&#39;)&#39;</span><span class="p">,</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+      <span class="n">wf_total</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="k">except</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_tran_info :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Could not extract the total number of Wannier&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Functions from file : </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">pgb</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+  <span class="c"># extracting the total number of WF in a principal layer</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">r&#39;(&#39;</span><span class="o">+</span><span class="n">integer_re</span><span class="o">+</span><span class="s">r&#39;)&#39;</span><span class="p">,</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+      <span class="n">wf_per_pl</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="k">except</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_tran_info :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Could not extract the total number of Wannier&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Functions per principal layer from file : </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">pgb</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+  <span class="c"># extracting the number of lead unit cells in a principal layer</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">r&#39;(&#39;</span><span class="o">+</span><span class="n">integer_re</span><span class="o">+</span><span class="s">r&#39;)&#39;</span><span class="p">,</span><span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+      <span class="n">cells_per_pl</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="k">except</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_tran_info :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Could not extract the total number of lead&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; unit cells per principal layer from file : </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">pgb</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+  <span class="c"># sanity check (wf_per_pl must be divisible by cells_per_pl)</span>
+  <span class="k">if</span> <span class="n">wf_per_pl</span><span class="o">%</span><span class="n">cells_per_pl</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_tran_info :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; the number of Wannier Functions per principal layer&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; must be divisible by the number of cells per principal&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; layer.&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; But here, the number of WF per PL is : </span><span class="si">%6i</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">wf_per_pl</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; and the number of cells per PL is    : </span><span class="si">%6i</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">cells_per_pl</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+  <span class="c"># extracting the direction of conduction and second direction</span>
+  <span class="c"># of sorting</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">r&#39;(\w+)\s+(\w+)&#39;</span><span class="p">,</span><span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+      <span class="n">cond_dir</span>   <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+      <span class="n">second_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+  <span class="k">except</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_tran_info :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Could not extract the direction of conduction and/or&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; the second direction of sorting&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; from file : </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">cond_dir</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">,</span><span class="s">&#39;y&#39;</span><span class="p">,</span><span class="s">&#39;z&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">second_dir</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">,</span><span class="s">&#39;y&#39;</span><span class="p">,</span><span class="s">&#39;z&#39;</span><span class="p">]:</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_tran_info :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; The direction of conduction is </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">cond_dir</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; The second direction of sorting is </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">second_dir</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; The expected directions are : &#39;x&#39;, &#39;y&#39; or &#39;z&#39;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">pgb</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+  <span class="c"># extracting the Wannier Function information</span>
+  <span class="n">wannier_functions</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="n">wf_iterator</span> <span class="o">=</span> <span class="mi">4</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">wf_counter</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="o">+</span><span class="n">wf_total</span><span class="p">):</span>
+      <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">wf_re</span><span class="p">,</span><span class="n">lines</span><span class="p">[</span><span class="n">wf_counter</span><span class="p">])</span>
+      <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+        <span class="n">wf_to_add</span> <span class="o">=</span> <span class="n">wannier_function</span><span class="p">()</span>
+        <span class="n">wf_to_add</span><span class="o">.</span><span class="n">setindex</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+        <span class="n">wf_to_add</span><span class="o">.</span><span class="n">setx</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span>
+        <span class="n">wf_to_add</span><span class="o">.</span><span class="n">sety</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span>
+        <span class="n">wf_to_add</span><span class="o">.</span><span class="n">setz</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
+        <span class="n">wf_to_add</span><span class="o">.</span><span class="n">setonsite</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">5</span><span class="p">)))</span>
+        <span class="n">wannier_functions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf_to_add</span><span class="p">)</span>
+      <span class="n">pgb</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">wf_counter</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+      <span class="n">wf_iterator</span> <span class="o">+=</span> <span class="mi">1</span>
+  <span class="k">except</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_tran_info :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Could not extract Wannier Function information&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; from file   : </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; line number : </span><span class="si">%i</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">wf_iterator</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+  <span class="c"># extracting the total number of atoms</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">r&#39;(&#39;</span><span class="o">+</span><span class="n">integer_re</span><span class="o">+</span><span class="s">r&#39;)&#39;</span><span class="p">,</span><span class="n">lines</span><span class="p">[</span><span class="mi">4</span><span class="o">+</span><span class="n">wf_total</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+      <span class="n">atom_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="k">except</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_tran_info :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Could not extract the total number of atoms&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; from file : </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">pgb</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">5</span><span class="o">+</span><span class="n">wf_total</span><span class="p">)</span>
+
+  <span class="c"># extracting the atomic coordinates</span>
+  <span class="n">atomic_coordinates</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="n">at_iterator</span> <span class="o">=</span> <span class="mi">5</span><span class="o">+</span><span class="n">wf_total</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">at_counter</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="o">+</span><span class="n">wf_total</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)):</span>
+      <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">atom_re</span><span class="p">,</span><span class="n">lines</span><span class="p">[</span><span class="n">at_counter</span><span class="p">])</span>
+      <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+        <span class="n">atom_to_add</span> <span class="o">=</span> <span class="n">atom</span><span class="p">()</span>
+        <span class="n">atom_to_add</span><span class="o">.</span><span class="n">setsymbol</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+        <span class="n">atom_to_add</span><span class="o">.</span><span class="n">setx</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span>
+        <span class="n">atom_to_add</span><span class="o">.</span><span class="n">sety</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span>
+        <span class="n">atom_to_add</span><span class="o">.</span><span class="n">setz</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
+        <span class="n">atomic_coordinates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom_to_add</span><span class="p">)</span>
+      <span class="n">pgb</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">at_counter</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+      <span class="n">at_iterator</span> <span class="o">+=</span> <span class="mi">1</span>
+  <span class="k">except</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_tran_info :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Could not extract the atomic coordinates&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; from file   : </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; line number : </span><span class="si">%i</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">at_iterator</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+  <span class="n">pgb</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+
+  <span class="k">return</span> <span class="p">(</span><span class="n">wf_total</span><span class="p">,</span>
+          <span class="n">wf_per_pl</span><span class="p">,</span>
+          <span class="n">cells_per_pl</span><span class="p">,</span>
+          <span class="n">cond_dir</span><span class="p">,</span>
+          <span class="n">second_dir</span><span class="p">,</span>
+          <span class="n">wannier_functions</span><span class="p">,</span>
+          <span class="n">atom_number</span><span class="p">,</span>
+          <span class="n">atomic_coordinates</span><span class="p">)</span>
+
+<span class="c">### function writing a *_tran_info.dat file in proper format ###</span>
+</div>
+<div class="viewcode-block" id="write_tran_info"><a class="viewcode-back" href="../utilities/modules.html#modules.write_tran_info">[docs]</a><span class="k">def</span> <span class="nf">write_tran_info</span><span class="p">(</span><span class="n">wf_num</span><span class="p">,</span>
+                    <span class="n">wf_num_per_pl</span><span class="p">,</span>
+                    <span class="n">cell_per_pl</span><span class="p">,</span>
+                    <span class="n">cond_dir</span><span class="p">,</span>
+                    <span class="n">second_dir</span><span class="p">,</span>
+                    <span class="n">wf_list</span><span class="p">,</span>
+                    <span class="n">atom_num</span><span class="p">,</span>
+                    <span class="n">atom_list</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   This function is designed to write a \*_tran_info.dat file from a list of data</span>
+
+<span class="sd">   The newly created file is called `new_tran_info.dat`</span>
+
+<span class="sd">   :Input(s):  an integer for the total number of Wannier Functions in the system</span>
+
+<span class="sd">               an integer for the number of Wannier Functions in one principal layer</span>
+
+<span class="sd">               an integer for the number of unit cells in one principal layer</span>
+
+<span class="sd">               a string giving the direction of conduction (which is also the first</span>
+<span class="sd">               direction of sorting)</span>
+
+<span class="sd">               a string giving the second direction of sorting</span>
+
+<span class="sd">               a list of Wannier Function objects</span>
+
+<span class="sd">               an integer giving the number of atoms in the system</span>
+
+<span class="sd">               a list of atom objects</span>
+
+<span class="sd">   :Output(s): a file in a format similar to the \*_tran_info.dat files given by Wannier90</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="c"># creating the ouput file</span>
+  <span class="n">outfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;./new_tran_info.dat&#39;</span><span class="p">,</span><span class="s">&#39;w&#39;</span><span class="p">)</span>
+  <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%6i</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">wf_num</span><span class="p">,))</span>
+  <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%6i</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">wf_num_per_pl</span><span class="p">,))</span>
+  <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%6i</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">cell_per_pl</span><span class="p">,))</span>
+  <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;     </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">cond_dir</span><span class="p">,</span><span class="n">second_dir</span><span class="p">))</span>
+  <span class="n">iterator</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="c"># here we forget about the original Wannier Function indices because the order</span>
+  <span class="c"># given by wf_list is going to be the new order of the Wannier Function basis</span>
+  <span class="c"># so we simply set the Wannier Function indices to be an increasing sequence of</span>
+  <span class="c"># integers starting at 1</span>
+  <span class="k">for</span> <span class="n">wf</span> <span class="ow">in</span> <span class="n">wf_list</span><span class="p">:</span>
+    <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%6i</span><span class="s">   </span><span class="si">%14.8f</span><span class="s">   </span><span class="si">%14.8f</span><span class="s">   </span><span class="si">%14.8f</span><span class="s">   </span><span class="si">%14.8f</span><span class="s">   </span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">iterator</span><span class="p">,</span><span class="n">wf</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">wf</span><span class="o">.</span><span class="n">y</span><span class="p">,</span><span class="n">wf</span><span class="o">.</span><span class="n">z</span><span class="p">,</span><span class="n">wf</span><span class="o">.</span><span class="n">onsite</span><span class="p">))</span>
+    <span class="n">iterator</span> <span class="o">+=</span> <span class="mi">1</span>
+  <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%6i</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">atom_num</span><span class="p">,))</span>
+  <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">atom_list</span><span class="p">:</span>
+    <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%5s</span><span class="s">   </span><span class="si">%14.8f</span><span class="s">   </span><span class="si">%14.8f</span><span class="s">   </span><span class="si">%14.8f</span><span class="s">   </span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span><span class="n">atom</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">atom</span><span class="o">.</span><span class="n">y</span><span class="p">,</span><span class="n">atom</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
+  <span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+  <span class="k">return</span>
+
+<span class="c">### function designed to read a Hamiltonian matrix ###</span>
+<span class="c">### as given by the Wannier90 code                 ###</span>
+</div>
+<div class="viewcode-block" id="read_htC"><a class="viewcode-back" href="../utilities/modules.html#modules.read_htC">[docs]</a><span class="k">def</span> <span class="nf">read_htC</span><span class="p">(</span><span class="n">matrix_file</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   This function reads a (conductor) Hamiltonian matrix given by the</span>
+<span class="sd">   Wannier90 code.</span>
+
+<span class="sd">   The name of the file generally ends with `*_htC.dat`</span>
+
+<span class="sd">   The format of this file is as follows :</span>
+
+<span class="sd">    - the first line contains comments</span>
+<span class="sd">    - the second line contains the size N of the (square) N*N matrix</span>
+<span class="sd">    - all the remaining lines are filled with numbers representing the</span>
+<span class="sd">      matrix elements.</span>
+
+<span class="sd">   .. Note:: the matrix elements are printed in Fortran (column major)</span>
+<span class="sd">             format. This means that if the matrix has elements H(i,j) for i and</span>
+<span class="sd">             j in [1,N], then the matrix elements are given in the following</span>
+<span class="sd">             order ::</span>
+<span class="sd">                H(1,1)  H(2,1)  H(3,1)  H(4,1) ...</span>
+<span class="sd">                H(j,1)  H(j+1,1) ...</span>
+
+<span class="sd">   :Input(s):   a string corresponding to the name of the file</span>
+<span class="sd">                containing the Hamiltonian matrix</span>
+
+<span class="sd">   :Output(s):  a rank-2 numpy array containing the Hamiltonian matrix</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="kn">import</span> <span class="nn">numpy</span>
+
+  <span class="c"># making sure that the matrix file is a file and is in the current</span>
+  <span class="c"># working directory</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">matrix_file</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_htC :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; </span><span class="si">%s</span><span class="s"> is either not in the current working directory&quot;</span> <span class="o">%</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; or is not a file&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  
+
+  <span class="c"># opening the matrix file and loading the matrix</span>
+  <span class="n">ham_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">matrix_file</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+  <span class="n">lines</span> <span class="o">=</span> <span class="n">ham_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+  <span class="n">ham_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+  <span class="c"># creating a progress bar</span>
+  <span class="n">load_widgets</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39; Loading matrix : &#39;</span><span class="p">,</span> <span class="n">Percentage</span><span class="p">(),</span> <span class="s">&#39; &#39;</span><span class="p">,</span>
+                  <span class="n">Bar</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s">&quot;#&quot;</span><span class="p">,</span><span class="n">left</span><span class="o">=</span><span class="s">&quot;[&quot;</span><span class="p">,</span><span class="n">right</span><span class="o">=</span><span class="s">&quot;]&quot;</span><span class="p">),</span><span class="s">&#39; &#39;</span><span class="p">,</span>
+                  <span class="n">ETA</span><span class="p">()]</span>
+  <span class="n">pgb</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">(</span><span class="n">widgets</span><span class="o">=</span><span class="n">load_widgets</span><span class="p">,</span><span class="n">maxval</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span><span class="n">term_width</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+  <span class="c"># now extracting the data</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">matrix_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+  <span class="k">except</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_htC :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Could not extract the matrix size from file </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">matrix_file</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Was the matrix file obtained from Wannier90 ?&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">pgb</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+  <span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">matrix_size</span><span class="p">,</span><span class="n">matrix_size</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="s">&#39;float&#39;</span><span class="p">)</span>
+  <span class="n">iterator</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">line_number</span> <span class="o">=</span> <span class="mi">2</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)):</span>
+      <span class="n">line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+      <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">iterator</span><span class="o">/</span><span class="n">matrix_size</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">iterator</span><span class="o">%</span><span class="n">matrix_size</span>
+        <span class="n">hamiltonian</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="n">iterator</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="n">line_number</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="n">pgb</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+  <span class="k">except</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_htC :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Could not properly extract data on line : </span><span class="si">%i</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">line_number</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; in file </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">matrix_file</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+  <span class="n">pgb</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+
+  <span class="k">return</span> <span class="n">hamiltonian</span>
+</div>
+<div class="viewcode-block" id="write_htC"><a class="viewcode-back" href="../utilities/modules.html#modules.write_htC">[docs]</a><span class="k">def</span> <span class="nf">write_htC</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span><span class="n">matrix</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   This function will take a Hamiltonian matrix and write it into</span>
+<span class="sd">   a file in a format usable by Wannier90.</span>
+
+<span class="sd">   In particular, the matrix will be written to file in column-major</span>
+<span class="sd">   format (see `read_htC` for more detail).</span>
+
+<span class="sd">   :Input(s):   a string corresponding to the name of the file that</span>
+<span class="sd">                will contain the Hamiltonian matrix.</span>
+
+<span class="sd">                a rank-2 numpy array containing the matrix</span>
+
+<span class="sd">   :Output(s):  a file containing the matrix</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="kn">import</span> <span class="nn">time</span>
+  <span class="kn">import</span> <span class="nn">numpy</span>
+
+  <span class="c"># creating the output file, making sure no other file with this</span>
+  <span class="c"># name exists</span>
+  <span class="n">answer</span> <span class="o">=</span> <span class="s">&quot;dummy&quot;</span>
+  <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Warning : </span><span class="si">%s</span><span class="s"> already exists&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Would you like to overwrite it ?&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">while</span> <span class="n">answer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;yes&quot;</span><span class="p">,</span><span class="s">&quot;no&quot;</span><span class="p">]:</span>
+      <span class="n">answer</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">raw_input</span><span class="p">(</span><span class="s">&quot; -&gt; type &#39;yes&#39; or &#39;no&#39; : &quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">answer</span><span class="o">==</span><span class="s">&quot;no&quot;</span><span class="p">:</span>
+      <span class="k">return</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+  <span class="n">output</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span><span class="s">&#39;w&#39;</span><span class="p">)</span>
+
+  <span class="c"># creating a progress bar</span>
+  <span class="n">write_widgets</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39; Writing matrix to file : &#39;</span><span class="p">,</span> <span class="n">Percentage</span><span class="p">(),</span> <span class="s">&#39; &#39;</span><span class="p">,</span>
+                   <span class="n">Bar</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s">&quot;#&quot;</span><span class="p">,</span><span class="n">left</span><span class="o">=</span><span class="s">&quot;[&quot;</span><span class="p">,</span><span class="n">right</span><span class="o">=</span><span class="s">&quot;]&quot;</span><span class="p">),</span><span class="s">&#39; &#39;</span><span class="p">,</span>
+                   <span class="n">ETA</span><span class="p">()]</span>
+  <span class="n">pgb</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">(</span><span class="n">widgets</span><span class="o">=</span><span class="n">write_widgets</span><span class="p">,</span><span class="n">maxval</span><span class="o">=</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">term_width</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+  <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot; # Written by &#39;write_htC&#39; on </span><span class="si">%s</span><span class="s"> at </span><span class="si">%s</span><span class="s"> </span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%A, </span><span class="si">%d</span><span class="s"> %B %Y&quot;</span><span class="p">,</span><span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">()),</span>
+                                                            <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%H:%M:%S&quot;</span><span class="p">,</span><span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">())))</span>
+  <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot; </span><span class="si">%6i</span><span class="s"> </span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+  <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+      <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot; </span><span class="si">%10.6f</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">]))</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot; </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+    <span class="n">pgb</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">col</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">output</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+  <span class="n">pgb</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+
+  <span class="k">return</span>
+
+<span class="c">### The sort_positions function ###</span>
+</div>
+<div class="viewcode-block" id="sort_positions"><a class="viewcode-back" href="../utilities/modules.html#modules.sort_positions">[docs]</a><span class="k">def</span> <span class="nf">sort_positions</span><span class="p">(</span><span class="n">atomic_coordinates</span><span class="p">,</span><span class="n">cond_dir</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   This function takes a list of atom objects and sorts</span>
+<span class="sd">   the atomic positions only in the direction of conduction</span>
+
+<span class="sd">   :Input(s):  the list of `atom` objects</span>
+
+<span class="sd">               a string which represents the direction of conduction</span>
+<span class="sd">               (which serves as the main direction of sorting)</span>
+
+<span class="sd">   :Output(s): a list of `atom` objects in sorted order</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="kn">import</span> <span class="nn">numpy</span>
+
+  <span class="c"># extracting the coordinates in the direction of conduction</span>
+  <span class="n">first_coordinate</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">if</span> <span class="n">cond_dir</span><span class="o">==</span><span class="s">&#39;x&#39;</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">atome</span> <span class="ow">in</span> <span class="n">atomic_coordinates</span><span class="p">:</span>
+      <span class="n">first_coordinate</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atome</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="n">cond_dir</span><span class="o">==</span><span class="s">&#39;y&#39;</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">atome</span> <span class="ow">in</span> <span class="n">atomic_coordinates</span><span class="p">:</span>
+      <span class="n">first_coordinate</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atome</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">atome</span> <span class="ow">in</span> <span class="n">atomic_coordinates</span><span class="p">:</span>
+      <span class="n">first_coordinate</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atome</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+  <span class="n">first_coordinate</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">first_coordinate</span><span class="p">)</span>
+
+  <span class="c"># sorting in the direction of conduction</span>
+  <span class="n">first_sort</span> <span class="o">=</span> <span class="n">first_coordinate</span><span class="o">.</span><span class="n">argsort</span><span class="p">()</span>
+
+  <span class="c"># returning the list of atoms in proper sorted order</span>
+  <span class="n">final_sorted_positions</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">first_sort</span><span class="p">:</span>
+    <span class="n">final_sorted_positions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atomic_coordinates</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+
+  <span class="k">return</span> <span class="n">final_sorted_positions</span>
+
+<span class="c">### The &quot;translate_to_zero&quot; function ###</span>
+</div>
+<div class="viewcode-block" id="translate_to_zero"><a class="viewcode-back" href="../utilities/modules.html#modules.translate_to_zero">[docs]</a><span class="k">def</span> <span class="nf">translate_to_zero</span><span class="p">(</span><span class="n">atomic_coordinates</span><span class="p">,</span><span class="n">cond_dir</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   This function takes a list of `atom` objects and</span>
+<span class="sd">   translate the coordinates in the direction of conduction</span>
+<span class="sd">   in such a way that the left-most atom is set to 0</span>
+
+<span class="sd">   :Input(s):  the list of `atom` objects</span>
+
+<span class="sd">               a string which represents the direction of conduction</span>
+
+<span class="sd">   :Output(s): a list of `atom` objects with the properly</span>
+<span class="sd">               translated coordinates</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="kn">import</span> <span class="nn">numpy</span>
+
+  <span class="c"># getting all the coordinates in the direction of conduction</span>
+  <span class="n">first_coordinate</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">if</span> <span class="n">cond_dir</span><span class="o">==</span><span class="s">&#39;x&#39;</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">atome</span> <span class="ow">in</span> <span class="n">atomic_coordinates</span><span class="p">:</span>
+      <span class="n">first_coordinate</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atome</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="n">cond_dir</span><span class="o">==</span><span class="s">&#39;y&#39;</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">atome</span> <span class="ow">in</span> <span class="n">atomic_coordinates</span><span class="p">:</span>
+      <span class="n">first_coordinate</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atome</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">atome</span> <span class="ow">in</span> <span class="n">atomic_coordinates</span><span class="p">:</span>
+      <span class="n">first_coordinate</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atome</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+  <span class="n">first_coordinate</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">first_coordinate</span><span class="p">)</span>
+
+  <span class="c"># now finding the index of the atom with the lowest coordinate</span>
+  <span class="n">min_index</span> <span class="o">=</span> <span class="n">first_coordinate</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+
+  <span class="c"># getting the lowest coordinate</span>
+  <span class="n">min_coordinate</span> <span class="o">=</span> <span class="n">first_coordinate</span><span class="p">[</span><span class="n">min_index</span><span class="p">]</span>
+
+  <span class="c"># translating all the coordinates</span>
+  <span class="k">if</span> <span class="n">cond_dir</span><span class="o">==</span><span class="s">&#39;x&#39;</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atomic_coordinates</span><span class="p">)):</span>
+      <span class="n">new_coord</span> <span class="o">=</span> <span class="n">atomic_coordinates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">min_coordinate</span>
+      <span class="n">atomic_coordinates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">setx</span><span class="p">(</span><span class="n">new_coord</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="n">cond_dir</span><span class="o">==</span><span class="s">&#39;y&#39;</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atomic_coordinates</span><span class="p">)):</span>
+      <span class="n">new_coord</span> <span class="o">=</span> <span class="n">atomic_coordinates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">min_coordinate</span>
+      <span class="n">atomic_coordinates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">sety</span><span class="p">(</span><span class="n">new_coord</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atomic_coordinates</span><span class="p">)):</span>
+      <span class="n">new_coord</span> <span class="o">=</span> <span class="n">atomic_coordinates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">min_coordinate</span>
+      <span class="n">atomic_coordinates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">setz</span><span class="p">(</span><span class="n">new_coord</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="n">atomic_coordinates</span>
+
+<span class="c">### The &quot;read_lead&quot; function ###</span>
+</div>
+<div class="viewcode-block" id="read_lead"><a class="viewcode-back" href="../utilities/modules.html#modules.read_lead">[docs]</a><span class="k">def</span> <span class="nf">read_lead</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   This function extracts the H00 and H01 matrices</span>
+<span class="sd">   from a `*_htL.dat` or `*_htR.dat` Wannier90 formatted</span>
+<span class="sd">   file.</span>
+
+<span class="sd">   The H00 and H01 matrices correspond respectively</span>
+<span class="sd">   to the **on-site** and **off-diagonal** matrix sub-blocks</span>
+<span class="sd">   of a lead principal layer.</span>
+
+<span class="sd">   :Input(s):  a string corresponding to the name (full</span>
+<span class="sd">               path) of the file containing the principal</span>
+<span class="sd">               layer matrices</span>
+
+<span class="sd">   :Output(s): a tuple with two rank-2 numpy arrays in the</span>
+<span class="sd">               following order (H00,H01)</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="kn">import</span> <span class="nn">numpy</span>
+
+  <span class="n">temp_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+  <span class="n">lines</span> <span class="o">=</span> <span class="n">temp_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+  <span class="n">temp_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+  <span class="n">starting_line_for_H00</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="n">starting_line_for_H01</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="p">)</span>
+
+  <span class="c"># extracting the size of H00</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">H00_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">starting_line_for_H00</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+  <span class="k">except</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_lead :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; could not extract the size of H00 on line 1&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; in file </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+  <span class="c"># extracting the size of H01</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">H01_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">starting_line_for_H01</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+  <span class="k">except</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_lead :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; could not extract the size of H01 on line </span><span class="si">%i</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">starting_line_for_H01</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; in file </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+  <span class="n">H00</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">H00_size</span><span class="p">,</span><span class="n">H00_size</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="s">&#39;float&#39;</span><span class="p">)</span>
+  <span class="n">H01</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">H01_size</span><span class="p">,</span><span class="n">H01_size</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="s">&#39;float&#39;</span><span class="p">)</span>
+
+  <span class="c"># extracting the H00 matrix</span>
+  <span class="n">iterator</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">line_number</span> <span class="o">=</span> <span class="n">starting_line_for_H00</span><span class="o">+</span><span class="mi">1</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">starting_line_for_H00</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">starting_line_for_H01</span><span class="p">):</span>
+      <span class="n">line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+      <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">iterator</span><span class="o">/</span><span class="n">H00_size</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">iterator</span><span class="o">%</span><span class="n">H00_size</span>
+        <span class="n">H00</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="n">iterator</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="n">line_number</span> <span class="o">+=</span> <span class="mi">1</span>
+  <span class="k">except</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_lead :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; could not extract matrix H00 on line </span><span class="si">%i</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">line_number</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; in file </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+  <span class="c"># extracting the H01 matrix</span>
+  <span class="n">iterator</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">line_number</span> <span class="o">=</span> <span class="n">starting_line_for_H01</span><span class="o">+</span><span class="mi">1</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">starting_line_for_H01</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)):</span>
+      <span class="n">line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+      <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">iterator</span><span class="o">/</span><span class="n">H01_size</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">iterator</span><span class="o">%</span><span class="n">H01_size</span>
+        <span class="n">H01</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="n">iterator</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="n">line_number</span> <span class="o">+=</span> <span class="mi">1</span>
+  <span class="k">except</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_lead :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; could not extract matrix H01 on line </span><span class="si">%i</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">line_number</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; in file </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="p">(</span><span class="n">H00</span><span class="p">,</span><span class="n">H01</span><span class="p">)</span>
+
+<span class="c">### The &quot;read_xyz&quot; function ###</span>
+</div>
+<div class="viewcode-block" id="read_xyz"><a class="viewcode-back" href="../utilities/modules.html#modules.read_xyz">[docs]</a><span class="k">def</span> <span class="nf">read_xyz</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   This function reads an XYZ formatted file and returns</span>
+<span class="sd">   a list of `atom` objects. If it can find it, the size</span>
+<span class="sd">   of the system is also returned.</span>
+
+<span class="sd">   :Input(s):  a string for the name of the xyz file</span>
+
+<span class="sd">   :Output(s): a list of `atom` objects</span>
+<span class="sd">               a float which represents the size of the system</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="c"># checking that the file exists</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_xyz :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; </span><span class="si">%s</span><span class="s"> is not a file or does not exist&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+  <span class="n">file_unit</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+  <span class="n">lines</span> <span class="o">=</span> <span class="n">file_unit</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+  <span class="n">file_unit</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+  <span class="c"># extracting the size of the system</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+  <span class="k">except</span><span class="p">:</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+  <span class="c"># now extracting the atomic coordinates</span>
+  <span class="n">atomic_coordinates</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="n">line_number</span> <span class="o">=</span> <span class="mi">2</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)):</span>
+      <span class="n">items</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+      <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span><span class="o">&gt;=</span><span class="mi">4</span><span class="p">:</span>
+        <span class="n">atom_to_add</span> <span class="o">=</span> <span class="n">atom</span><span class="p">()</span>
+        <span class="n">atom_to_add</span><span class="o">.</span><span class="n">setsymbol</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">atom_to_add</span><span class="o">.</span><span class="n">setx</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">atom_to_add</span><span class="o">.</span><span class="n">sety</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="n">atom_to_add</span><span class="o">.</span><span class="n">setz</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+        <span class="n">atomic_coordinates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom_to_add</span><span class="p">)</span>
+      <span class="n">line_number</span> <span class="o">+=</span> <span class="mi">1</span>
+  <span class="k">except</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in read_xyz :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; could not extract informations on line </span><span class="si">%i</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">line_number</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; in file </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>    
+
+  <span class="k">return</span> <span class="p">(</span><span class="n">atomic_coordinates</span><span class="p">,</span><span class="n">size</span><span class="p">)</span>
+
+<span class="c">### The &quot;write_xyz&quot; function ###</span>
+</div>
+<div class="viewcode-block" id="write_xyz"><a class="viewcode-back" href="../utilities/modules.html#modules.write_xyz">[docs]</a><span class="k">def</span> <span class="nf">write_xyz</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="n">atomic_coordinates</span><span class="p">,</span><span class="n">size</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   This function takes a list of `atom` objects and prints</span>
+<span class="sd">   their cartesian coordinates in a file with xyz format</span>
+
+<span class="sd">   :Input(s):  a string for the name of the xyz file</span>
+
+<span class="sd">               the list of `atom` objects</span>
+
+<span class="sd">               a float, the size of the system in Angstrom(s)</span>
+
+<span class="sd">   :Output(s): a file with name `filename` containing the</span>
+<span class="sd">               atomic positions in xyz format</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="kn">import</span> <span class="nn">time</span>
+
+  <span class="c"># creating the output file, making sure no other file with this</span>
+  <span class="c"># name exists</span>
+  <span class="n">answer</span> <span class="o">=</span> <span class="s">&quot;dummy&quot;</span>
+  <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Warning : </span><span class="si">%s</span><span class="s"> already exists&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot; Would you like to overwrite it ?&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">while</span> <span class="n">answer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;yes&quot;</span><span class="p">,</span><span class="s">&quot;no&quot;</span><span class="p">]:</span>
+      <span class="n">answer</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">raw_input</span><span class="p">(</span><span class="s">&quot; -&gt; type &#39;yes&#39; or &#39;no&#39; : &quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">answer</span><span class="o">==</span><span class="s">&quot;no&quot;</span><span class="p">:</span>
+      <span class="k">return</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+  <span class="n">output</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s">&#39;w&#39;</span><span class="p">)</span>
+  <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%6i</span><span class="s"> </span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atomic_coordinates</span><span class="p">)))</span>
+  <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%10.5f</span><span class="s"> &#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">size</span><span class="p">))</span> <span class="c"># the size will be used in &#39;system_builder.py&#39;</span>
+  <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot; # Written by &#39;write_xyz&#39; on </span><span class="si">%s</span><span class="s"> at </span><span class="si">%s</span><span class="s"> </span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%A, </span><span class="si">%d</span><span class="s"> %B %Y&quot;</span><span class="p">,</span><span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">()),</span>
+                                                            <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%H:%M:%S&quot;</span><span class="p">,</span><span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">())))</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atomic_coordinates</span><span class="p">)):</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot; </span><span class="si">%s</span><span class="s">  </span><span class="si">%10.6f</span><span class="s">  </span><span class="si">%10.6f</span><span class="s">  </span><span class="si">%10.6f</span><span class="s"> </span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">atomic_coordinates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span>
+                                                    <span class="n">atomic_coordinates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                                                    <span class="n">atomic_coordinates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                                                    <span class="n">atomic_coordinates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
+  <span class="n">output</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+  <span class="k">return</span>
+
+<span class="c">### The &quot;barycenter&quot; function ###</span>
+</div>
+<div class="viewcode-block" id="barycenter"><a class="viewcode-back" href="../utilities/modules.html#modules.barycenter">[docs]</a><span class="k">def</span> <span class="nf">barycenter</span><span class="p">(</span><span class="n">wannier_functions</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   This function takes a list of Wannier Functions and computes</span>
+<span class="sd">   its barycenter.</span>
+
+<span class="sd">   :Input(s):  a list of Wannier Function objects</span>
+
+<span class="sd">   :Output(s): a rank-1 numpy array containing the x, y, z</span>
+<span class="sd">               coordinates of the barycenter</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="kn">import</span> <span class="nn">numpy</span>
+
+  <span class="n">x_coordinates</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="n">y_coordinates</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="n">z_coordinates</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">wf</span> <span class="ow">in</span> <span class="n">wannier_functions</span><span class="p">:</span>
+    <span class="n">x_coordinates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">y_coordinates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">z_coordinates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+  <span class="n">x_coordinates</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_coordinates</span><span class="p">)</span>
+  <span class="n">y_coordinates</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_coordinates</span><span class="p">)</span>
+  <span class="n">z_coordinates</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">z_coordinates</span><span class="p">)</span>
+
+  <span class="n">barycenter_x</span> <span class="o">=</span> <span class="n">x_coordinates</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+  <span class="n">barycenter_y</span> <span class="o">=</span> <span class="n">y_coordinates</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+  <span class="n">barycenter_z</span> <span class="o">=</span> <span class="n">z_coordinates</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+  <span class="n">barycenter</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">barycenter_x</span><span class="p">,</span><span class="n">barycenter_y</span><span class="p">,</span><span class="n">barycenter_z</span><span class="p">])</span> 
+
+  <span class="k">return</span> <span class="n">barycenter</span>
+
+<span class="c">### The &quot;print_wf&quot; function for pretty print of a list of WF ###</span>
+</div>
+<div class="viewcode-block" id="print_wf"><a class="viewcode-back" href="../utilities/modules.html#modules.print_wf">[docs]</a><span class="k">def</span> <span class="nf">print_wf</span><span class="p">(</span><span class="n">wf_list</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   A utility function that allows the user to print the information</span>
+<span class="sd">   contained in each Wannier Function of a list</span>
+
+<span class="sd">   :Input(s):  a list of Wannier Function objects</span>
+
+<span class="sd">   :Output(s): a string printed on the screen</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">print</span> <span class="s">&quot;&quot;</span>
+  <span class="k">print</span> <span class="s">&quot; Index        x       y       z      on-site&quot;</span>
+  <span class="n">string_to_print</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+  <span class="k">for</span> <span class="n">wf</span> <span class="ow">in</span> <span class="n">wf_list</span><span class="p">:</span>
+    <span class="n">string_to_print</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="si">%6i</span><span class="s">   </span><span class="si">%6.3f</span><span class="s">  </span><span class="si">%6.3f</span><span class="s">  </span><span class="si">%6.3f</span><span class="s">      </span><span class="si">%6.3f</span><span class="s"> </span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                                                                   <span class="n">wf</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                                                                   <span class="n">wf</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                                                                   <span class="n">wf</span><span class="o">.</span><span class="n">z</span><span class="p">,</span>
+                                                                   <span class="n">wf</span><span class="o">.</span><span class="n">onsite</span><span class="p">)</span>
+  <span class="k">print</span> <span class="n">string_to_print</span>
+
+  <span class="k">return</span>
+
+<span class="c">### The &quot;sort&quot; function ###</span>
+</div>
+<div class="viewcode-block" id="sort"><a class="viewcode-back" href="../utilities/modules.html#modules.sort">[docs]</a><span class="k">def</span> <span class="nf">sort</span><span class="p">(</span><span class="n">wf_list</span><span class="p">,</span><span class="n">cond_dir</span><span class="p">,</span><span class="n">second_dir</span><span class="p">,</span><span class="n">delta</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   This function takes a list of Wannier Functions and sorts the</span>
+<span class="sd">   atomic positions according to a scheme similar to the one in</span>
+<span class="sd">   Wannier90.</span>
+
+<span class="sd">   The first direction of sorting is `cond_dir` and the</span>
+<span class="sd">   second direction of sorting is `second_dir`.</span>
+
+<span class="sd">   :Input(s):   a list of Wannier Function objects</span>
+
+<span class="sd">                a string that gives the first direction of sorting (which</span>
+<span class="sd">                corresponds to the direction of conduction)</span>
+
+<span class="sd">                a string that gives the second direction of sorting</span>
+
+<span class="sd">                a float which gives the distance threshold for grouping WF</span>
+
+<span class="sd">   :Output(s):  a list of Wannier Function objects properly sorted</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="kn">import</span> <span class="nn">numpy</span>
+
+  <span class="c"># we check first that cond_dir and second_dir are distinct</span>
+  <span class="k">if</span> <span class="n">cond_dir</span><span class="o">==</span><span class="n">second_dir</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Error in sort :&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; The direction of conduction and the second&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; sorting direction are equal. Something is&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; wrong.&quot;</span>
+    <span class="k">print</span> <span class="s">&quot; Exiting the program...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+  <span class="c"># first we extract the coordinates</span>
+  <span class="n">coord1</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="n">coord2</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="n">coord3</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">if</span> <span class="n">cond_dir</span><span class="o">==</span><span class="s">&#39;x&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">second_dir</span><span class="o">==</span><span class="s">&#39;y&#39;</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">wf</span> <span class="ow">in</span> <span class="n">wf_list</span><span class="p">:</span>
+        <span class="n">coord1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">coord2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">coord3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">wf</span> <span class="ow">in</span> <span class="n">wf_list</span><span class="p">:</span>
+        <span class="n">coord1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">coord2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">coord3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="n">cond_dir</span><span class="o">==</span><span class="s">&#39;y&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">second_dir</span><span class="o">==</span><span class="s">&#39;z&#39;</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">wf</span> <span class="ow">in</span> <span class="n">wf_list</span><span class="p">:</span>
+        <span class="n">coord1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">coord2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">coord3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">wf</span> <span class="ow">in</span> <span class="n">wf_list</span><span class="p">:</span>
+        <span class="n">coord1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">coord2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">coord3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">second_dir</span><span class="o">==</span><span class="s">&#39;x&#39;</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">wf</span> <span class="ow">in</span> <span class="n">wf_list</span><span class="p">:</span>
+        <span class="n">coord1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">coord2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">coord3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">wf</span> <span class="ow">in</span> <span class="n">wf_list</span><span class="p">:</span>
+        <span class="n">coord1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">coord2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">coord3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+  <span class="n">coord1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coord1</span><span class="p">)</span>
+  <span class="n">coord2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coord2</span><span class="p">)</span>
+  <span class="n">coord3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coord3</span><span class="p">)</span>
+
+  <span class="c"># a function to find the group structure of a list of WF</span>
+  <span class="c"># in a given direction</span>
+  <span class="k">def</span> <span class="nf">find_gp</span><span class="p">(</span><span class="n">wf_index_list</span><span class="p">,</span><span class="n">coord</span><span class="p">):</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">in_group</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wf_index_list</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="s">&#39;bool&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wf_index_list</span><span class="p">)):</span>
+      <span class="k">if</span> <span class="n">in_group</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="bp">False</span><span class="p">:</span>
+        <span class="n">in_group</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="bp">True</span>
+        <span class="n">gp_i</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">gp_i</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf_index_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">wf_index_list</span><span class="p">)),</span><span class="nb">len</span><span class="p">(</span><span class="n">wf_index_list</span><span class="p">)):</span>
+          <span class="k">if</span> <span class="n">in_group</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">==</span><span class="bp">False</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="n">wf_index_list</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span><span class="o">-</span><span class="n">coord</span><span class="p">[</span><span class="n">wf_index_list</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span><span class="o">&lt;=</span><span class="n">delta</span><span class="p">:</span>
+              <span class="n">in_group</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">=</span><span class="bp">True</span>
+              <span class="n">gp_i</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wf_index_list</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        <span class="n">groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gp_i</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">groups</span>
+
+  <span class="c"># now we sort in the first direction</span>
+  <span class="n">initial_order</span> <span class="o">=</span> <span class="n">coord1</span><span class="o">.</span><span class="n">argsort</span><span class="p">()</span>
+
+  <span class="c"># now we group the WF in the first direction</span>
+  <span class="n">group</span> <span class="o">=</span> <span class="n">find_gp</span><span class="p">(</span><span class="n">initial_order</span><span class="p">,</span><span class="n">coord1</span><span class="p">)</span>
+
+  <span class="c"># we now look at each group and sorts in the second direction</span>
+  <span class="c"># group again and sort  each sub_group in the third direction</span>
+  <span class="n">final_order</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">gp</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
+    <span class="n">positions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">coord2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">gp</span><span class="p">])</span>
+    <span class="n">sorted_gp</span> <span class="o">=</span> <span class="p">[</span><span class="n">gp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">positions</span><span class="o">.</span><span class="n">argsort</span><span class="p">()]</span>
+    <span class="n">sub_gp</span> <span class="o">=</span> <span class="n">find_gp</span><span class="p">(</span><span class="n">sorted_gp</span><span class="p">,</span><span class="n">coord2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">sgp</span> <span class="ow">in</span> <span class="n">sub_gp</span><span class="p">:</span>
+      <span class="n">spositions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">coord3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sgp</span><span class="p">])</span>
+      <span class="n">sorted_sgp</span> <span class="o">=</span> <span class="p">[</span><span class="n">sgp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">spositions</span><span class="o">.</span><span class="n">argsort</span><span class="p">()]</span>
+      <span class="n">final_order</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sorted_sgp</span><span class="p">)</span>
+
+  <span class="c"># now we can construct the final list of sorted Wannier Functions</span>
+  <span class="n">final_wf_list</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">final_order</span><span class="p">:</span>
+    <span class="n">new_wf</span> <span class="o">=</span> <span class="n">wannier_function</span><span class="p">()</span>
+    <span class="n">new_wf</span><span class="o">.</span><span class="n">setindex</span><span class="p">(</span><span class="n">wf_list</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">new_wf</span><span class="o">.</span><span class="n">setx</span><span class="p">(</span><span class="n">wf_list</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">new_wf</span><span class="o">.</span><span class="n">sety</span><span class="p">(</span><span class="n">wf_list</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">new_wf</span><span class="o">.</span><span class="n">setz</span><span class="p">(</span><span class="n">wf_list</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+    <span class="n">new_wf</span><span class="o">.</span><span class="n">setonsite</span><span class="p">(</span><span class="n">wf_list</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span><span class="o">.</span><span class="n">onsite</span><span class="p">)</span>
+    <span class="n">final_wf_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_wf</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="n">final_wf_list</span>
+
+<span class="c">### The &quot;atom&quot; class ###$</span>
+</div>
+<div class="viewcode-block" id="atom"><a class="viewcode-back" href="../utilities/modules.html#modules.atom">[docs]</a><span class="k">class</span> <span class="nc">atom</span><span class="p">:</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   This is the class for Atoms</span>
+
+<span class="sd">   An atom object has the following attributes :</span>
+<span class="sd">     - a symbol (a string) (access through `*.symbol`)</span>
+<span class="sd">     - an x coordinate (a float) (access through `*.x`)</span>
+<span class="sd">     - a  y coordinate (a float) (access through `*.y`)</span>
+<span class="sd">     - a  z coordinate (a float) (access through `*.z`)</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">setsymbol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">atom_symbol</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">atom_symbol</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">setx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x_coord</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x_coord</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">sety</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">y_coord</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">y_coord</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">setz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">z_coord</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">z_coord</span><span class="p">)</span>
+
+<span class="c">### The &quot;wannier_function&quot; class ###</span>
+</div>
+<div class="viewcode-block" id="wannier_function"><a class="viewcode-back" href="../utilities/modules.html#modules.wannier_function">[docs]</a><span class="k">class</span> <span class="nc">wannier_function</span><span class="p">:</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   This is the class for Wannier Functions</span>
+
+<span class="sd">   A wannier_function object has the following attributes :</span>
+<span class="sd">     - an index (an integer) (access through `*.index`)</span>
+<span class="sd">     - an x coordinate (a float) (access through `*.x`)</span>
+<span class="sd">     - a  y coordinate (a float) (access through `*.y`)</span>
+<span class="sd">     - a  z coordinate (a float) (access through `*.z`)</span>
+<span class="sd">     - an on-site matrix element (a float) (access through `*.onsite`)</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">setindex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wf_index</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">wf_index</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">setx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x_coord</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x_coord</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">sety</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">y_coord</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">y_coord</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">setz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">z_coord</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">z_coord</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">setonsite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">wf_onsite</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">onsite</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">wf_onsite</span><span class="p">)</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">LSQC v1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Nicolas Poilvert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+    </div>
+  </body>
+</html>
