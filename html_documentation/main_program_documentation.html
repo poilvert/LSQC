@@ -1,0 +1,428 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Main programs documentation &mdash; LSQC v1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="LSQC v1.0 documentation" href="index.html" />
+    <link rel="next" title="Tutorial" href="tutorial.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">LSQC v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="main-programs-documentation">
+<h1>Main programs documentation<a class="headerlink" href="#main-programs-documentation" title="Permalink to this headline">¶</a></h1>
+<p>This section will give a presentation of the main programs (their capabilities,
+their limitations, their purpose). For a practical introduction to the programs
+see the <strong>tutorial</strong>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Those programs are intended to work with input files strictly given by the <a class="reference external" href="http://www.wannier.org">Wannier90</a> code.
+The reason being that those input files have clean, ordered, and complete structure perfectly
+suited for providing the following programs with vital informations. If the user creates its
+own input files for feeding one of the program below, we cannot ensure that the answer given
+by the program will be accurate or even correct.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All the programs described below make use of the <a class="reference external" href="http://numpy.scipy.org/">numpy</a> utility for the <a class="reference external" href="http://www.python.org">Python</a> programming
+language. For one other program (visualize_defect_influence.py), <a class="reference external" href="http://code.enthought.com/projects/mayavi/">mayavi</a> is also
+required.</p>
+</div>
+<div class="section" id="program-visualize-defect-influence-py">
+<h2>1. Program <cite>visualize_defect_influence.py</cite> :<a class="headerlink" href="#program-visualize-defect-influence-py" title="Permalink to this headline">¶</a></h2>
+<p><strong>purpose</strong></p>
+<blockquote>
+<p>This program uses the <em>*_tran_info.dat</em> file given by the <a class="reference external" href="http://www.wannier.org">Wannier90</a> code and
+makes use of the <em>constraints</em> function defined in the <em>constraints.py</em> <a class="reference external" href="http://www.python.org">Python</a>
+module in the <em>utilities</em> directory.</p>
+<p>With those two files, the program tries to extract the &#8220;on-site&#8221; matrix elements
+of the Wannier Functions and plots the deviations of those matrix elements with
+respect to given reference values.</p>
+<p>The reference value of a given Wannier Function is taken to be the &#8220;on-site&#8221; matrix
+element of an &#8220;equivalent&#8221; Wannier Function that belongs to the left-most unit cell
+of the system.</p>
+<p>By &#8220;equivalent&#8221; we mean a Wannier Function that is geometrically equivalent in
+the two orthogonal directions to the direction of conduction, and equivalent in
+&#8220;nature&#8221; (a &#8220;p<sub>z</sub>&#8220;-type Wannier Function is compared to a &#8220;p<sub>z</sub>&#8220;-type,
+etc...). We try not to compare apples and oranges...</p>
+<p>The left-most unit cell being the farther away from the defect (which belongs
+to the central region), we expect the &#8220;on-site&#8221; elements of the Wannier Functions
+in this cell to be little influenced by the defect. As a consequence their &#8220;on-site&#8221;
+matrix elements should be &#8220;bulk-like&#8221; and so suited for playing the role of a
+reference value.</p>
+</blockquote>
+<p><strong>use</strong></p>
+<blockquote>
+<p>The program is called from the command-line. The possible options are</p>
+<div class="highlight-python"><pre>[prompt] python visualize_defect_influence.py [options]
+
+[options]
+-f, --file,  this corresponds  to the name of the *_tran_info.dat file
+-p, --print, a boolean to decide whether an ouput of the deviations is
+             desired</pre>
+</div>
+</blockquote>
+<p><strong>limitations and assumptions</strong></p>
+<blockquote>
+<p>Like every program built for a purpose, this latter one has been built on assumptions and
+is limited in its capacities.</p>
+<p>The first assumption made by the program is that the <em>user</em> has been modifying the <cite>constraints</cite>
+function inside the <cite>constraints.py</cite> module. This function will help the program to distinguish
+between Wannier Functions belonging to the system backbone and Wannier Functions belonging to
+the &#8220;defect&#8221;. It is <strong>imperative</strong> that the user modifies this function in order to describe
+properly the positions of the system&#8217;s defect Wannier Functions.</p>
+<p>The program will try to determine what is the &#8220;equivalent&#8221; Wannier Function in the left-most unit cell
+for a given Wannier Function in the system. For this, the program basically projects the coordinates
+of the Wannier Function centre onto the left-most unit cell. Then it tries to find the Wannier Function
+in this unit cell which is the closest geometrically. Moreover we also make sure that the &#8220;on-site&#8221;
+matrix elements are also &#8220;close&#8221; in absolute value. If a Wannier Function in the left-most unit cell
+satisfies those criteria, then it will considered to be a potential &#8220;equivalent&#8221; Wannier Function.
+When all the potential candidate &#8220;equivalent&#8221; Wannier Functions have been found, we select the
+one that is both closest in geometric distance <em>and</em> matrix element value.</p>
+<p>The program also assumes that the list of Wannier Functions given by the file <em>*_tran_info.dat</em>, is
+given in the properly sorted order. If the user uses the file produced by the <a class="reference external" href="http://www.wannier.org">Wannier90</a> code, there
+should not be any problem.</p>
+<p>Finally, in order to plot the Wannier Functions and deviations of the matrix elements, the program
+makes use of a very powerful and open-source third-party program called <strong>mayavi2</strong>. So the user
+needs to make sure that this program has been installed on his/her computer and is &#8220;importable&#8221; in
+from within another <a class="reference external" href="http://www.python.org">Python</a> program. On Ubuntu systems, the installation of this program is as simple
+as</p>
+<div class="highlight-python"><pre>[prompt] sudo apt-get install mayavi2</pre>
+</div>
+</blockquote>
+<p><strong>what the program outputs</strong></p>
+<blockquote>
+<p>The program will always produce a <strong>3D plot</strong> of the structure (atoms represented by white/light gray
+balls all of the same size) and the <strong>deviations</strong> to the &#8220;on-site&#8221; matrix elements (in color with
+sizes changing with the deviation). Basically the more pronounced the color and the bigger the ball,
+the bigger the deviation is from the reference value.</p>
+<p>Optionally (with command-line option <tt class="docutils literal"><span class="pre">-p</span></tt> or <tt class="docutils literal"><span class="pre">--print</span></tt>), the user can request a file containing
+diverse informations, among which is the deviation for each Wannier Function&#8217;s &#8220;on-site&#8221; element.</p>
+</blockquote>
+</div>
+<div class="section" id="program-rotate-conductor-py">
+<h2>2. Program <cite>rotate_conductor.py</cite> :<a class="headerlink" href="#program-rotate-conductor-py" title="Permalink to this headline">¶</a></h2>
+<p><strong>purpose</strong></p>
+<blockquote>
+<p>The goal of this program is to &#8220;rotate&#8221; an Hamiltonian matrix. By &#8220;rotate&#8221;, we mean that, given the
+order of the Wannier Function basis used to express the original Hamiltonian basis, the program will
+rotate the Wannier Functions in real-space and re-order the basis. Once the basis has been re-ordered,
+then a new Hamiltonian matrix, expressed in this &#8220;rotated&#8221; basis, can be computed.</p>
+<p>In order to have a feeling for what the program is doing, imagine a Carbon Nanotube or a Silicon Nanowire
+having a defect in its center. Then one can compute the Hamiltonian matrix of that whole system by having
+<a class="reference external" href="http://www.wannier.org">Wannier90</a> do it for you (&#8220;lcr&#8221;-type quantum conductance calculation). Now this Hamiltonian matrix (contained
+in <em>seedname_htC.dat</em>) has been expressed in a basis of Wannier Functions ordered internally by <a class="reference external" href="http://www.wannier.org">Wannier90</a>
+for maximum transferability. Imagine now that the lead part of the system has a 60-degre rotational
+symmetry about the main axis. We would like to be able to express the Hamiltonian matrix of the &#8220;60-degre rotated&#8221; system.
+Then this is exactly what this program is doing.</p>
+</blockquote>
+<p><strong>use</strong></p>
+<blockquote>
+<p>The program is called from the command-line. The possible options are</p>
+<div class="highlight-python"><pre>[prompt] python rotate_conductor.py [options]
+
+[options]
+-f, --file,   this corresponds  to the name of the *_tran_info.dat file
+-m, --matrix, string corresponding to the name of the Hamiltonian matrix
+              file
+-a, --angle,  angle in radians for the rotation about the main axis
+-d, --delta,  optional parameter used internally to group the Wannier
+              Functions together. This parameter is completely equivalent
+              to the tran_group_threshold parameter in Wannier90</pre>
+</div>
+</blockquote>
+<p><strong>limitations and assumptions</strong></p>
+<blockquote>
+It is important to realize that this program was first intended for producing Hamiltonian matrices that
+are &#8220;rotationally equivalent&#8221; to a given original Hamiltonian matrix. By &#8220;rotationally equivalent&#8221; we mean
+that the lead parts of the system have rotational symmetries. We cannot guarantee that this program
+will fit the user needs if those needs are outside the realm of the orginal purpose.</blockquote>
+<p><strong>what the program outputs</strong></p>
+<blockquote>
+<dl class="docutils">
+<dt>The program will give 2 outputs:</dt>
+<dd><ul class="first last simple">
+<li>a file containing the <strong>rotated</strong> Hamiltonian matrix in the same format as the one in <a class="reference external" href="http://www.wannier.org">Wannier90</a></li>
+<li>a file corresponding to the <strong>new</strong> *_tran_info.dat file. This is necessary since both the atoms and the
+Hamiltonian matrix have been &#8220;rotated&#8221;.</li>
+</ul>
+</dd>
+</dl>
+</blockquote>
+</div>
+<div class="section" id="program-compactify-conductor-py">
+<h2>3. Program <cite>compactify_conductor.py</cite> :<a class="headerlink" href="#program-compactify-conductor-py" title="Permalink to this headline">¶</a></h2>
+<p><strong>purpose</strong></p>
+<blockquote>
+<p>The purpose here is to gather all the matrix elements involving at least one Wannier Function belonging to
+the &#8220;defect&#8221; region. Once gathered, the Wannier Function basis in which the Hamiltonian matrix is expressed
+is re-ordered in such a way to insert the &#8220;defect&#8221; Wannier Functions in the &#8220;middle&#8221; of the new basis.</p>
+<p>The goal in doing so is to &#8220;compactify&#8221; the Hamiltonian matrix and so enhance transferability. Indeed,
+transferability is dictated by the length of the left and right leads on both side of the defect region.
+The longer those lead regions are, the more transferable the matrix will be when connecting it to other
+Hamiltonian matrices that have similar lead structures.</p>
+</blockquote>
+<p><strong>use</strong></p>
+<blockquote>
+<p>The program is called from the command-line. The possible options are</p>
+<div class="highlight-python"><pre>[prompt] python compactify_conductor.py [options]
+
+[options]
+-f, --file,   this corresponds  to the name of the *_tran_info.dat file
+-m, --matrix, string corresponding to the name of the Hamiltonian matrix
+              file</pre>
+</div>
+</blockquote>
+<p><strong>limitations and assumptions</strong></p>
+<blockquote>
+Just like in the case of <cite>visualize_defect_influence.py</cite>, the user needs to modify the <cite>constraints</cite> function
+inside the <cite>constraints.py</cite> module. This function will help the program to distinguish
+between Wannier Functions belonging to the system backbone and Wannier Functions belonging to
+the &#8220;defect&#8221;. It is <strong>imperative</strong> that the user modifies this function in order to describe
+properly the positions of the system&#8217;s defect Wannier Functions that, in turn, tells the code which
+are the matrix elements to &#8220;compactify&#8221;.</blockquote>
+<p><strong>what the program outputs</strong></p>
+<blockquote>
+<dl class="docutils">
+<dt>The program gives 2 output files:</dt>
+<dd><ul class="first last simple">
+<li>One which contains the &#8220;compactified&#8221; Hamiltonian matrix (in the same format
+as the one in <a class="reference external" href="http://www.wannier.org">Wannier90</a></li>
+<li>a file corresponding to the <strong>new</strong> *_tran_info.dat file. This is necessary since the order of the Wannier
+Function basis has been altered.</li>
+</ul>
+</dd>
+</dl>
+</blockquote>
+</div>
+<div class="section" id="program-cut-conductor-py">
+<h2>4. Program <cite>cut_conductor.py</cite> :<a class="headerlink" href="#program-cut-conductor-py" title="Permalink to this headline">¶</a></h2>
+<p><strong>purpose</strong></p>
+<blockquote>
+<p>This program takes a Hamiltonian matrix and removes as many lead unit cells on each side of the &#8220;defect&#8221; as
+the user wants to. The purpose here is to produce &#8220;shorter&#8221; Hamiltonian matrices that will enable the user
+to build Large Scale structures with a <strong>higher density</strong> of defects per unit length.</p>
+<p>For optimal use, it is best to have &#8220;compactified&#8221; the Hamiltonian matrix in a previous step (using
+<cite>compactify_conductor.py</cite>) even though this is ablsolutely not a requirement.</p>
+</blockquote>
+<p><strong>use</strong></p>
+<blockquote>
+<p>The program is called from the command-line. The possible options are</p>
+<div class="highlight-python"><pre>[prompt] python cut_conductor.py [options]
+
+[options]
+-f, --file,     this corresponds  to the name of the *_tran_info.dat file
+-m, --matrix,   string corresponding to the name of the Hamiltonian matrix
+                file
+-p, --positions a boolean to tell the code whether the user wants the atomic
+                positions to be printed out or not. Default is "False"
+-a, --all       a boolean to decide whether all the possible Hamiltonian
+                matrices resulting from all the possible ways to cut the
+                original Hamiltonian matrix are to be outputed</pre>
+</div>
+</blockquote>
+<p><strong>limitations and assumptions</strong></p>
+<blockquote>
+This program assumes that the system is ordered in such a way that the &#8220;defect&#8221; lies in the &#8220;middle&#8221; of the
+Hamiltonian matrix. As a consequence, the N first Wannier Functions to the left of the Hamiltonian matrix
+are supposed to correspond to the left-most lead unit cell if N is the number of Wannier Functions in <strong>one</strong>
+lead unit cell. The same is true for the &#8220;right&#8221; unit cells. This fact explains why it is better to &#8220;compactify&#8221;
+the Hamiltonian matrix first, so as to gather all the &#8220;defect&#8221; Wannier Functions in the &#8220;middle&#8221; of the matrix.</blockquote>
+<p><strong>what the program outputs</strong></p>
+<blockquote>
+<p>The program will produce <strong>one or many</strong> directories. In each of those directories, there will be at least one
+file corresponding to a reduced Hamiltonian matrix (an Hamiltonian matrix resulting from the &#8220;cut&#8221; of the original
+Hamiltonian matrix). The <strong>names</strong> for the directories are quite obvious. For example <cite>0_left_1_right</cite> means that
+this directory contains the Hamiltonian matrix resulting from the operation of removing 1 unit cell to the right
+of the original matrix.</p>
+<p>Optionally, the user can request to also produce the atomic positions in XYZ format for the reduced system. Those
+positions are simply the original atomic positions of the conductor part of the system from which one or many unit
+cells have been removed to the left and/or to the right.</p>
+</blockquote>
+</div>
+<div class="section" id="program-system-builder-py">
+<h2>5. Program <cite>system_builder.py</cite> :<a class="headerlink" href="#program-system-builder-py" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This program is by far the most important of the main programs. With it, the user will be in a position
+to create any Large Scale structure from elementary &#8220;building blocks&#8221;. Those building blocks correspond
+to any &#8220;defect&#8221; Hamiltonian matrices that the user wishes to insert in the structure. Those Hamiltonian
+matrices can be produced either by use of some or all of the main programs in this package or can be user
+defined. Please have a look at the <strong>limitations and assumptions</strong> section for more details about the
+format of the Hamiltonian matrices.</p>
+</div>
+<p><strong>purpose</strong></p>
+<blockquote>
+This program uses a set of directories containing the Hamiltonian matrices of the different defects
+and uses them for building the Hamiltonian matrix of a system that can contain as many defects as
+the user wants. Of course the obvious limitation comes from the size of the Large Scale Hamiltonian
+matrix.</blockquote>
+<p><strong>use</strong></p>
+<blockquote>
+<p>The program is called from the command-line. The possible options are</p>
+<div class="highlight-python"><pre>[prompt] python system_builder.py [options]
+
+[options]
+-c, --custom,  this tells the code that the user wishes to input the sequence
+               of defect(s) him/her-self
+-r, --random,  this tells the code that a random sequence of defects will be
+               constructed
+-p, --path,    this is a string corresponding to the full path to the directory
+               containing all the defect(s) directories</pre>
+</div>
+<p>Beyond those 3 command-line options, the user will be walked through a set of questions enabling
+the code to acquire sufficient information about the system and build it.</p>
+</blockquote>
+<p><strong>limitations and assumptions</strong></p>
+<blockquote>
+<p>It is important to be aware of all the assumptions/requirements for the program to work correctly.</p>
+<p>First of all, the programs needs a root directory. The full path to this root directory should be given
+to the program through the &#8220;-p&#8221; command line option. By <strong>default</strong>, the program takes the current
+working directory &#8220;./&#8221; to be the root directory unless the user provides the full path him/her-self.</p>
+<p>Second, the root directory should contain a set of directories, one for each distinct defect. Each of
+those directories should contain <strong>at most</strong> 2 files. The first one should correspond to the Hamiltonian
+matrix of the defect. This file should <strong>end with</strong> <cite>_htC.dat</cite>. Optionnaly another file corresponding
+to the atomic positions of the defect and <strong>ending with</strong> <cite>.xyz</cite> can be present.
+The optional position file is given in XYZ format with the <strong>extra</strong> information of the system&#8217;s length
+at the <em>beginning</em> of the second line.</p>
+</blockquote>
+<p><strong>what the program outputs</strong></p>
+<blockquote>
+<p>This program will outputs all the necessary files for an <strong>LCR</strong>-type of calculation with <a class="reference external" href="http://www.wannier.org">Wannier90</a>.
+Just move into this directory and from there type:</p>
+<blockquote>
+<tt class="docutils literal"><span class="pre">wannier90.x</span> <span class="pre">random_system</span></tt></blockquote>
+<p>or</p>
+<blockquote>
+<tt class="docutils literal"><span class="pre">wannier90.x</span> <span class="pre">custom_system</span></tt></blockquote>
+<p>depending on what type of system the user built.</p>
+</blockquote>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">When building the Large Scale structure, the program joins the defect Hamiltonian matrices together. In
+doing so, the program is <strong>implicitly</strong> suggesting that the Wannier Function <strong>signs</strong> (Wannier Functions
+are complex in general but in this case they are real and so a sign uncertainty remains) are known to
+be consistent from one Hamiltonian matrix to another. This is a <strong>strong</strong> statement, since the <a class="reference external" href="http://www.wannier.org">Wannier90</a>
+code generally gives <em>random</em> signs when it computes the Wannier Functions.
+As a consequence, it is <strong>the user responsibility</strong> to ensure that the signs of the Wannier Functions are
+consistent from one defect Hamiltonian matrix to another. In the case of a Silicon Nanowire for example,
+all the Wannier Functions of the Valence manifold are bonding σ-like in character. As a consequence one could
+enforce all the Wannier Functions to be &#8220;positive&#8221; by computing the integral of the Wannier Functions over
+space and force it to be positive quantity. In this case, there are no worries of sign mismatch when connecting
+the Hamiltonian matrices of two distinct defects.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Main programs documentation</a><ul>
+<li><a class="reference internal" href="#program-visualize-defect-influence-py">1. Program <cite>visualize_defect_influence.py</cite> :</a></li>
+<li><a class="reference internal" href="#program-rotate-conductor-py">2. Program <cite>rotate_conductor.py</cite> :</a></li>
+<li><a class="reference internal" href="#program-compactify-conductor-py">3. Program <cite>compactify_conductor.py</cite> :</a></li>
+<li><a class="reference internal" href="#program-cut-conductor-py">4. Program <cite>cut_conductor.py</cite> :</a></li>
+<li><a class="reference internal" href="#program-system-builder-py">5. Program <cite>system_builder.py</cite> :</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="introduction.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorial.html"
+                        title="next chapter">Tutorial</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/main_program_documentation.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="index.html">LSQC v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Nicolas Poilvert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+    </div>
+  </body>
+</html>

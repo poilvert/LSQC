@@ -1,0 +1,280 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>progressbar &mdash; LSQC v1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="LSQC v1.0 documentation" href="../index.html" />
+    <link rel="prev" title="modules" href="modules.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="modules"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">LSQC v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="progressbar">
+<h1><a class="reference internal" href="#module-progressbar" title="(Unix, Linux) "><tt class="xref py py-mod docutils literal"><span class="pre">progressbar</span></tt></a><a class="headerlink" href="#progressbar" title="Permalink to this headline">¶</a></h1>
+<div class="sidebar">
+<p class="first sidebar-title">Author</p>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Release:</th><td class="field-body">2.2</td>
+</tr>
+<tr class="field"><th class="field-name">Date:</th><td class="field-body">July 2006</td>
+</tr>
+<tr class="field"><th class="field-name">Authors:</th><td class="field-body"><strong>Nilton Volpato</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p id="module-progressbar"><em>Platforms: </em>Unix, Linux</p>
+<p><strong>Module information</strong> :</p>
+<p>Text progressbar library for python.</p>
+<p>This library provides a text mode progressbar. This is tipically used
+to  display  the progress  of  a  long running operation, providing a
+visual clue that processing is underway.</p>
+<p>The ProgressBar  class  manages  the progress, and  the format of the
+line is given by  a number of widgets. A widget is an object that may
+display differently depending on the state of the progress.</p>
+<p>There are three types of widget:</p>
+<ul class="simple">
+<li>a string, which always shows itself;</li>
+<li>a ProgressBarWidget, which may return a different value every time
+its update method is called; and</li>
+<li>a ProgressBarWidgetHFill,  which is like ProgressBarWidget, except
+it expands to fill the remaining width of the line.</li>
+</ul>
+<p>The progressbar  module  is very easy to use, yet  very powerful. And
+automatically supports features like auto-resizing when available.</p>
+<dl class="class">
+<dt id="progressbar.Bar">
+<em class="property">class </em><tt class="descclassname">progressbar.</tt><tt class="descname">Bar</tt><big>(</big><em>marker='#'</em>, <em>left='|'</em>, <em>right='|'</em><big>)</big><a class="reference internal" href="../_modules/progressbar.html#Bar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#progressbar.Bar" title="Permalink to this definition">¶</a></dt>
+<dd><p>The bar of progress. It will strech to fill the line.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="progressbar.ETA">
+<em class="property">class </em><tt class="descclassname">progressbar.</tt><tt class="descname">ETA</tt><a class="reference internal" href="../_modules/progressbar.html#ETA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#progressbar.ETA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Widget for the Estimated Time of Arrival</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="progressbar.FileTransferSpeed">
+<em class="property">class </em><tt class="descclassname">progressbar.</tt><tt class="descname">FileTransferSpeed</tt><a class="reference internal" href="../_modules/progressbar.html#FileTransferSpeed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#progressbar.FileTransferSpeed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Widget for showing the transfer speed (useful for file transfers).</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="progressbar.Percentage">
+<em class="property">class </em><tt class="descclassname">progressbar.</tt><tt class="descname">Percentage</tt><a class="reference internal" href="../_modules/progressbar.html#Percentage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#progressbar.Percentage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Just the percentage done.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="progressbar.ProgressBar">
+<em class="property">class </em><tt class="descclassname">progressbar.</tt><tt class="descname">ProgressBar</tt><big>(</big><em>maxval=100</em>, <em>widgets=</em><span class="optional">[</span>, <em>&lt;progressbar.Percentage object at 0x10d5f50&gt;</em>, <em>' '</em>, <em>&lt;progressbar.Bar object at 0x10d5f10&gt;</em><span class="optional">]</span>, <em>term_width=None</em>, <em>fd=&lt;open file '&lt;stderr&gt;'</em>, <em>mode 'w' at 0x2ba0095d5140&gt;</em><big>)</big><a class="reference internal" href="../_modules/progressbar.html#ProgressBar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#progressbar.ProgressBar" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the ProgressBar class, it updates and prints the bar.</p>
+<p>The term_width parameter may be  an integer. Or None, in which case
+it will try to guess it, if it fails it will default to 80 columns.</p>
+<p>The simple use is like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pbar</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">()</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="c"># do something</span>
+<span class="gp">... </span>   <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pbar</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>But  anything you want  to do is possible (well, almost anything).
+You can supply different widgets of any type in any order. And you
+can  even write your own widgets! There  are many  widgets already
+shipped and you should experiment with them.</p>
+<p>When implementing  a  widget  update  method you may access any
+attribute  or  function of the ProgressBar  object  calling the
+widget&#8217;s update method. The most important attributes you would
+like to access are:
+- <em>currval</em> current value of the progress, 0 &lt;= currval &lt;= maxval
+- <em>maxval</em> maximum (and final) value of the progress
+- <em>finished</em> True if the bar is have finished (reached 100%), False o/w
+- <em>start_time</em> first time update() method of ProgressBar was called
+- <em>seconds_elapsed</em> seconds elapsed since start_time
+- <em>percentage()</em> percentage of the progress (this is a method)</p>
+<dl class="method">
+<dt id="progressbar.ProgressBar.finish">
+<tt class="descname">finish</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/progressbar.html#ProgressBar.finish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#progressbar.ProgressBar.finish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to tell the progress is finished.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="progressbar.ProgressBar.percentage">
+<tt class="descname">percentage</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/progressbar.html#ProgressBar.percentage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#progressbar.ProgressBar.percentage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the percentage of the progress.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="progressbar.ProgressBar.start">
+<tt class="descname">start</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/progressbar.html#ProgressBar.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#progressbar.ProgressBar.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start measuring time, and prints the bar at 0%.</p>
+<p>It returns self so you can use it like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pbar</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">()</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="c"># do something</span>
+<span class="gp">... </span>   <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pbar</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="progressbar.ProgressBar.update">
+<tt class="descname">update</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/progressbar.html#ProgressBar.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#progressbar.ProgressBar.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the progress bar to a new value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="progressbar.ProgressBarWidget">
+<em class="property">class </em><tt class="descclassname">progressbar.</tt><tt class="descname">ProgressBarWidget</tt><a class="reference internal" href="../_modules/progressbar.html#ProgressBarWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#progressbar.ProgressBarWidget" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is an element of ProgressBar formatting.</p>
+<p>The ProgressBar object will call it&#8217;s update value when  an update
+is needed. It&#8217;s size may change between call, but the results will
+not be good if the size changes drastically and repeatedly.</p>
+<dl class="method">
+<dt id="progressbar.ProgressBarWidget.update">
+<tt class="descname">update</tt><big>(</big><em>pbar</em><big>)</big><a class="reference internal" href="../_modules/progressbar.html#ProgressBarWidget.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#progressbar.ProgressBarWidget.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the string representing the widget.</p>
+<p>The parameter pbar is a reference to the calling ProgressBar,
+where one can access attributes  of the class for knowing how
+the update must be made.</p>
+<p>At least this function must be overriden.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="progressbar.ProgressBarWidgetHFill">
+<em class="property">class </em><tt class="descclassname">progressbar.</tt><tt class="descname">ProgressBarWidgetHFill</tt><a class="reference internal" href="../_modules/progressbar.html#ProgressBarWidgetHFill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#progressbar.ProgressBarWidgetHFill" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a variable width element of ProgressBar formatting.</p>
+<p>The ProgressBar object will  call it&#8217;s update value, informing the
+width this object must the made. This is like TeX <cite>hfill</cite>, it will
+expand  to fill  the line. You can  use more  than one in the same
+line, and they  will all have  the same width,  and  together will
+fill the line.</p>
+<dl class="method">
+<dt id="progressbar.ProgressBarWidgetHFill.update">
+<tt class="descname">update</tt><big>(</big><em>pbar</em>, <em>width</em><big>)</big><a class="reference internal" href="../_modules/progressbar.html#ProgressBarWidgetHFill.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#progressbar.ProgressBarWidgetHFill.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the string representing the widget.</p>
+<p>The parameter pbar is a reference to the calling ProgressBar,
+where one can access attributes of the class  for knowing how
+the  update  must  be  made. The parameter width is the total
+horizontal width the widget must have.</p>
+<p>At least this function must be overriden.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="progressbar.ReverseBar">
+<em class="property">class </em><tt class="descclassname">progressbar.</tt><tt class="descname">ReverseBar</tt><big>(</big><em>marker='#'</em>, <em>left='|'</em>, <em>right='|'</em><big>)</big><a class="reference internal" href="../_modules/progressbar.html#ReverseBar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#progressbar.ReverseBar" title="Permalink to this definition">¶</a></dt>
+<dd><p>The reverse bar of progress, or bar of regress. :)</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="progressbar.RotatingMarker">
+<em class="property">class </em><tt class="descclassname">progressbar.</tt><tt class="descname">RotatingMarker</tt><big>(</big><em>markers='|/-\'</em><big>)</big><a class="reference internal" href="../_modules/progressbar.html#RotatingMarker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#progressbar.RotatingMarker" title="Permalink to this definition">¶</a></dt>
+<dd><p>A rotating marker for filling the bar of progress.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">modules</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/utilities/progressbar.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="modules"
+             >previous</a> |</li>
+        <li><a href="../index.html">LSQC v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Nicolas Poilvert.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
+    </div>
+  </body>
+</html>

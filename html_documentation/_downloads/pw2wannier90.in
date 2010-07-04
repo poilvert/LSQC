@@ -1,0 +1,9 @@
+&inputpp
+  outdir='/your/scratch/directory/'
+  prefix='cnt33H'
+  seedname='cnt33H'
+  write_unk=.false.
+  write_amn=.true.
+  write_mmn=.true.
+  write_unkg=.true.
+/
